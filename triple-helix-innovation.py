@@ -33,7 +33,7 @@ from typing import Any, Dict, List, Optional
 
 
 WELCOME = "welcome to the triple helix  innovation chatbot"
-MODEL = "triplehelix"
+MODEL = os.getenv("HELIX_MODEL", "gpt-5.2").strip() or "gpt-5.2"
 
 # Keep PDF context bounded (characters) to avoid huge prompts.
 MAX_PDF_CHARS_PER_FILE = 30_000
@@ -161,39 +161,75 @@ class OpenAIChatClient:
     base_url: str
 
     def chat_completions(self, messages: List[Dict[str, str]], model: str = MODEL) -> str:
-        url = f"{self.base_url}/chat/completions"
-        payload: Dict[str, Any] = {
-            "model": model,
-            "messages": messages,
-            "temperature": 0.2,
-        }
-        req = urllib.request.Request(
-            url=url,
-            data=json.dumps(payload).encode("utf-8"),
-            headers={
-                "Authorization": f"Bearer {self.api_key}",
-                "Content-Type": "application/json",
-            },
-            method="POST",
-        )
+        # Prefer the official OpenAI SDK (Responses API), but keep a legacy HTTP fallback.
         try:
-            with urllib.request.urlopen(req, timeout=120) as resp:
-                raw = resp.read().decode("utf-8")
-        except urllib.error.HTTPError as e:
-            body = ""
-            try:
-                body = e.read().decode("utf-8")
-            except Exception:
-                body = ""
-            raise RuntimeError(f"OpenAI HTTP error {e.code}: {body or e.reason}") from e
-        except urllib.error.URLError as e:
-            raise RuntimeError(f"OpenAI connection error: {e}") from e
+            from openai import OpenAI  # type: ignore
 
-        data = json.loads(raw)
-        try:
-            return data["choices"][0]["message"]["content"]
+            system_prompt = ""
+            history = messages
+            if messages and messages[0].get("role") == "system":
+                system_prompt = messages[0].get("content", "")
+                history = messages[1:]
+
+            def _render(hist: List[Dict[str, str]]) -> str:
+                parts: List[str] = []
+                for m in hist:
+                    role = (m.get("role") or "").lower()
+                    content = m.get("content") or ""
+                    if not content:
+                        continue
+                    if role == "user":
+                        parts.append(f"User: {content}")
+                    elif role == "assistant":
+                        parts.append(f"Assistant: {content}")
+                    else:
+                        parts.append(f"{role.capitalize() or 'Message'}: {content}")
+                return "\n".join(parts).strip()
+
+            client = OpenAI(api_key=self.api_key, base_url=self.base_url)
+            resp = client.responses.create(
+                model=model,
+                instructions=system_prompt,
+                input=_render(history),
+                temperature=0.2,
+            )
+            text = getattr(resp, "output_text", None)
+            return (text or "").strip() or "(No response.)"
         except Exception:
-            raise RuntimeError(f"Unexpected OpenAI response: {data}")
+            # Legacy HTTP fallback: Chat Completions endpoint.
+            url = f"{self.base_url}/chat/completions"
+            payload: Dict[str, Any] = {
+                "model": model,
+                "messages": messages,
+                "temperature": 0.2,
+            }
+            req = urllib.request.Request(
+                url=url,
+                data=json.dumps(payload).encode("utf-8"),
+                headers={
+                    "Authorization": f"Bearer {self.api_key}",
+                    "Content-Type": "application/json",
+                },
+                method="POST",
+            )
+            try:
+                with urllib.request.urlopen(req, timeout=120) as resp:
+                    raw = resp.read().decode("utf-8")
+            except urllib.error.HTTPError as e:
+                body = ""
+                try:
+                    body = e.read().decode("utf-8")
+                except Exception:
+                    body = ""
+                raise RuntimeError(f"OpenAI HTTP error {e.code}: {body or e.reason}") from e
+            except urllib.error.URLError as e:
+                raise RuntimeError(f"OpenAI connection error: {e}") from e
+
+            data = json.loads(raw)
+            try:
+                return data["choices"][0]["message"]["content"]
+            except Exception:
+                raise RuntimeError(f"Unexpected OpenAI response: {data}")
 
 
 def _transcript_path() -> Path:
