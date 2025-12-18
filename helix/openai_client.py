@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 class OpenAIResult:
     text: str
     model: str
+    response_id: str | None = None
     raw: Any | None = None
     usage: dict[str, Any] | None = None
 
@@ -34,7 +35,8 @@ class OpenAIProvider:
     async def generate(
         self,
         *,
-        message: str,
+        input_text: str | None = None,
+        input_messages: list[dict[str, str]] | None = None,
         system_prompt: str,
         model: str,
         temperature: float,
@@ -42,10 +44,21 @@ class OpenAIProvider:
         metadata: dict[str, Any] | None = None,
     ) -> OpenAIResult:
         """Calls the OpenAI Responses API when available, with a safe fallback."""
+        if (input_text is None) == (input_messages is None):
+            raise ValueError("Provide exactly one of input_text or input_messages")
+
+        normalized_input: Any
+        if input_messages is not None:
+            # Responses API supports structured multi-turn inputs (role + content).
+            # Keep it as simple strings for broad SDK compatibility.
+            normalized_input = [{"role": m.get("role", "user"), "content": (m.get("content") or "")} for m in input_messages]
+        else:
+            normalized_input = input_text or ""
+
         payload: dict[str, Any] = {
             "model": model,
             "instructions": system_prompt,
-            "input": message,
+            "input": normalized_input,
             "temperature": temperature,
         }
         if max_output_tokens is not None:
@@ -56,6 +69,7 @@ class OpenAIProvider:
         # Preferred: Responses API
         if hasattr(self._client, "responses"):
             resp = await self._client.responses.create(**payload)
+            response_id = getattr(resp, "id", None)
             text = getattr(resp, "output_text", None)
             if not text:
                 # Fallback extraction
@@ -81,20 +95,36 @@ class OpenAIProvider:
                 except Exception:
                     usage = None
 
-            return OpenAIResult(text=(text or "").strip() or "(No response.)", model=model, raw=resp, usage=usage)
+            return OpenAIResult(
+                text=(text or "").strip() or "(No response.)",
+                model=model,
+                response_id=response_id,
+                raw=resp,
+                usage=usage,
+            )
 
         # Older SDK fallback: Chat Completions
         if hasattr(self._client, "chat"):
+            user_text = normalized_input if isinstance(normalized_input, str) else ""
+            chat_messages: list[dict[str, str]] = [{"role": "system", "content": system_prompt}]
+            if isinstance(normalized_input, list):
+                chat_messages.extend(normalized_input)
+            else:
+                chat_messages.append({"role": "user", "content": user_text})
+
             cc = await self._client.chat.completions.create(
                 model=model,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": message},
-                ],
+                messages=chat_messages,
                 temperature=temperature,
             )
             text = (cc.choices[0].message.content or "").strip() or "(No response.)"
-            return OpenAIResult(text=text, model=model, raw=cc, usage=getattr(cc, "usage", None))
+            return OpenAIResult(
+                text=text,
+                model=model,
+                response_id=getattr(cc, "id", None),
+                raw=cc,
+                usage=getattr(cc, "usage", None),
+            )
 
         logger.error("OpenAI SDK missing both responses and chat APIs")
         raise RuntimeError("OpenAI SDK is not compatible with this service")

@@ -4,7 +4,7 @@ import logging
 import time
 import uuid
 from datetime import datetime, timezone
-from typing import Any
+from typing import Any, Literal
 
 from fastapi import Depends, FastAPI, Request, Response
 from pydantic import BaseModel, Field
@@ -36,6 +36,10 @@ async def _startup() -> None:
 
 class ChatRequest(BaseModel):
     message: str = Field(min_length=1, description="User message")
+    messages: list["ChatMessage"] = Field(
+        default_factory=list,
+        description="Optional prior messages for multi-turn context (excluding the current `message`).",
+    )
     system_prompt: str | None = Field(default=None, description="Override system prompt")
     context_documents: list[str] = Field(default_factory=list, description="Additional context strings")
 
@@ -46,11 +50,17 @@ class ChatRequest(BaseModel):
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 
+class ChatMessage(BaseModel):
+    role: Literal["user", "assistant", "system"]
+    content: str = Field(min_length=1)
+
+
 class ChatResponse(BaseModel):
     id: str
     created_at: datetime
     model: str
     response: str
+    openai_response_id: str | None = None
     usage: dict[str, Any] | None = None
 
 
@@ -97,10 +107,11 @@ async def chat(req: ChatRequest, request: Request):
 
     # For reproducibility/debugging, log shapes, not secrets.
     logger.info(
-        "chat.request model=%s temperature=%s message_chars=%d docs=%d",
+        "chat.request model=%s temperature=%s message_chars=%d prior_messages=%d docs=%d",
         model,
         temperature,
         len(req.message),
+        len(req.messages),
         len(req.context_documents),
     )
     if settings.log_request_body:
@@ -113,23 +124,37 @@ async def chat(req: ChatRequest, request: Request):
             created_at=datetime.now(tz=timezone.utc),
             model=model,
             response=f"[dry_run] Received {len(req.message)} chars. Provide OPENAI_API_KEY to enable live calls.",
+            openai_response_id=None,
             usage=None,
         )
 
     system_prompt = req.system_prompt or default_system_prompt(req.context_documents)
+    extra_system = "\n\n".join(m.content for m in req.messages if m.role == "system")
+    if extra_system.strip():
+        system_prompt = system_prompt + "\n\nAdditional system notes:\n" + extra_system.strip()
+
+    input_messages: list[dict[str, str]] = [
+        {"role": m.role, "content": m.content} for m in req.messages if m.role != "system"
+    ]
+    input_messages.append({"role": "user", "content": req.message})
 
     provider: OpenAIProvider | None = getattr(request.app.state, "openai_provider", None)
     if provider is None:
         provider = OpenAIProvider()
         request.app.state.openai_provider = provider
 
+    rid = request_id_var.get()
+    merged_metadata = dict(req.metadata or {})
+    if rid and "request_id" not in merged_metadata:
+        merged_metadata["request_id"] = rid
+
     result = await provider.generate(
-        message=req.message,
+        input_messages=input_messages,
         system_prompt=system_prompt,
         model=model,
         temperature=temperature,
         max_output_tokens=req.max_output_tokens,
-        metadata=req.metadata or None,
+        metadata=merged_metadata or None,
     )
 
     return ChatResponse(
@@ -137,5 +162,6 @@ async def chat(req: ChatRequest, request: Request):
         created_at=datetime.now(tz=timezone.utc),
         model=result.model,
         response=result.text,
+        openai_response_id=result.response_id,
         usage=result.usage,
     )
