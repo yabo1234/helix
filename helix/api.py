@@ -25,8 +25,13 @@ app = FastAPI(title="Helix (Triple Helix chatbot)", version="0.1.0")
 
 @app.on_event("startup")
 async def _startup() -> None:
-    # Create the OpenAI client once for connection reuse on Cloud Run.
-    app.state.openai_provider = OpenAIProvider()
+    # Optional warm-up: only create the OpenAI client if configured.
+    # This keeps the service startable for health checks and dry-run testing.
+    if settings.openai_api_key and not settings.dry_run:
+        try:
+            app.state.openai_provider = OpenAIProvider()
+        except Exception:
+            logger.exception("startup.openai_provider_init_failed")
 
 
 class ChatRequest(BaseModel):
@@ -87,11 +92,6 @@ async def readyz():
 
 @app.post("/v1/chat", dependencies=[Depends(require_api_key)], response_model=ChatResponse)
 async def chat(req: ChatRequest, request: Request):
-    provider: OpenAIProvider | None = getattr(request.app.state, "openai_provider", None)
-    if provider is None:
-        provider = OpenAIProvider()
-        request.app.state.openai_provider = provider
-
     model = req.model or settings.model
     temperature = settings.temperature if req.temperature is None else req.temperature
 
@@ -106,7 +106,22 @@ async def chat(req: ChatRequest, request: Request):
     if settings.log_request_body:
         logger.info("chat.request.body %s", req.model_dump_json())
 
+    if settings.dry_run:
+        logger.info("chat.dry_run enabled=true")
+        return ChatResponse(
+            id=str(uuid.uuid4()),
+            created_at=datetime.now(tz=timezone.utc),
+            model=model,
+            response=f"[dry_run] Received {len(req.message)} chars. Provide OPENAI_API_KEY to enable live calls.",
+            usage=None,
+        )
+
     system_prompt = req.system_prompt or default_system_prompt(req.context_documents)
+
+    provider: OpenAIProvider | None = getattr(request.app.state, "openai_provider", None)
+    if provider is None:
+        provider = OpenAIProvider()
+        request.app.state.openai_provider = provider
 
     result = await provider.generate(
         message=req.message,

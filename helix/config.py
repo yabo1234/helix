@@ -19,6 +19,7 @@ class Settings:
     openai_base_url: str = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1").rstrip("/")
     model: str = os.getenv("HELIX_MODEL", "gpt-5.2")
     temperature: float = float(os.getenv("HELIX_TEMPERATURE", "0.2"))
+    dry_run: bool = os.getenv("HELIX_DRY_RUN", "false").lower() in {"1", "true", "yes"}
 
     # Access control
     access_mode: str = os.getenv("HELIX_ACCESS_MODE", "public").lower()  # public|private

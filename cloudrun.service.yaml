@@ -27,6 +27,8 @@ spec:
               value: "REPLACE_ME"
             - name: HELIX_MODEL
               value: "gpt-5.2"
+            - name: HELIX_DRY_RUN
+              value: "false"
             # App-level public/private toggle:
             # - public: no app auth
             # - private: require Authorization: Bearer $HELIX_API_KEY (or X-API-Key)
