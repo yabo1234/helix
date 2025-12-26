@@ -1,0 +1,28 @@
+__pycache__/
+*.py[cod]
+
+# Virtualenvs
+.venv/
+venv/
+
+# Local environment / secrets
+.env
+.env.*
+
+# Logs / transcripts
+transcripts/
+
+# Packaging
+build/
+dist/
+*.egg-info/
+
+# Android / Gradle / IntelliJ
+.idea/
+*.iml
+.gradle/
+local.properties
+**/build/
+**/.externalNativeBuild/
+**/.cxx/
+.kotlin/
