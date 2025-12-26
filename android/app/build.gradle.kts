@@ -26,6 +26,17 @@ android {
 
     buildConfigField("String", "HELIX_BASE_URL", "\"$baseUrl\"")
     buildConfigField("String", "HELIX_API_KEY", "\"$apiKey\"")
+
+    // Firebase client config (set these in ~/.gradle/gradle.properties)
+    // FIREBASE_API_KEY=...
+    // FIREBASE_APP_ID=... (Android app id from Firebase console)
+    // FIREBASE_PROJECT_ID=...
+    val firebaseApiKey = readGradleProp("FIREBASE_API_KEY") ?: ""
+    val firebaseAppId = readGradleProp("FIREBASE_APP_ID") ?: ""
+    val firebaseProjectId = readGradleProp("FIREBASE_PROJECT_ID") ?: ""
+    buildConfigField("String", "FIREBASE_API_KEY", "\"$firebaseApiKey\"")
+    buildConfigField("String", "FIREBASE_APP_ID", "\"$firebaseAppId\"")
+    buildConfigField("String", "FIREBASE_PROJECT_ID", "\"$firebaseProjectId\"")
   }
 
   buildTypes {
@@ -72,5 +83,10 @@ dependencies {
 
   // Coroutines
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
+
+  // Firebase Auth (initialized programmatically; no google-services.json required)
+  implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+  implementation("com.google.firebase:firebase-auth-ktx")
 }
 

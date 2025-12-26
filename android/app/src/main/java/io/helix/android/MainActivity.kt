@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,10 +33,11 @@ class MainActivity : ComponentActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    vm.refreshAuthState()
     setContent {
       MaterialTheme {
         Surface(modifier = Modifier.fillMaxSize()) {
-          MainScreen(vm)
+          MainScreen(vm, firebaseConfigError = FirebaseInit.ensureInitialized(this))
         }
       }
     }
@@ -43,7 +45,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun MainScreen(vm: MainViewModel) {
+private fun MainScreen(vm: MainViewModel, firebaseConfigError: String?) {
   val state by vm.state.collectAsState()
 
   Column(
@@ -63,6 +65,50 @@ private fun MainScreen(vm: MainViewModel) {
       color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
 
+    firebaseConfigError?.let { err ->
+      Text(
+        text = err,
+        color = MaterialTheme.colorScheme.error,
+        style = MaterialTheme.typography.bodyMedium,
+      )
+    }
+
+    if (state.signedInEmail == null) {
+      Text(text = "Sign in (Firebase email/password)", style = MaterialTheme.typography.titleMedium)
+
+      OutlinedTextField(
+        value = state.email,
+        onValueChange = vm::onEmailChanged,
+        modifier = Modifier.fillMaxWidth(),
+        label = { Text("Email") },
+        singleLine = true,
+      )
+      OutlinedTextField(
+        value = state.password,
+        onValueChange = vm::onPasswordChanged,
+        modifier = Modifier.fillMaxWidth(),
+        label = { Text("Password") },
+        singleLine = true,
+      )
+
+      Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        Button(onClick = vm::signIn, enabled = !state.isLoading) { Text("Sign in") }
+        Button(onClick = vm::signUp, enabled = !state.isLoading) { Text("Sign up") }
+      }
+    } else {
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+      ) {
+        Text(
+          text = "Signed in: ${state.signedInEmail}",
+          style = MaterialTheme.typography.bodyMedium,
+        )
+        Button(onClick = vm::signOut, enabled = !state.isLoading) { Text("Sign out") }
+      }
+    }
+
     OutlinedTextField(
       value = state.question,
       onValueChange = vm::onQuestionChanged,
@@ -73,7 +119,7 @@ private fun MainScreen(vm: MainViewModel) {
 
     Button(
       onClick = vm::send,
-      enabled = !state.isLoading,
+      enabled = !state.isLoading && state.signedInEmail != null,
       modifier = Modifier.align(Alignment.End),
     ) {
       Text("Send")

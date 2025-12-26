@@ -6,11 +6,12 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any, Literal
 
-from fastapi import Depends, FastAPI, Request, Response
+from fastapi import Depends, FastAPI, HTTPException, Request, Response, status
 from pydantic import BaseModel, Field
 
-from .auth import require_api_key
+from .auth import AuthContext, require_auth
 from .config import settings
+from .db import init_db
 from .logging_config import configure_logging
 from .openai_client import OpenAIProvider
 from .prompts import default_system_prompt
@@ -32,6 +33,12 @@ async def _startup() -> None:
             app.state.openai_provider = OpenAIProvider()
         except Exception:
             logger.exception("startup.openai_provider_init_failed")
+    # Initialize DB early for auth modes that use it.
+    if settings.effective_auth_mode in {"firebase"}:
+        try:
+            init_db()
+        except Exception:
+            logger.exception("startup.db_init_failed")
 
 
 class ChatRequest(BaseModel):
@@ -96,12 +103,41 @@ async def readyz():
         "ok": True,
         "openai_api_key_configured": bool(settings.openai_api_key),
         "model": settings.model,
-        "access_mode": settings.access_mode,
+        "auth_mode": settings.effective_auth_mode,
+        "trial_days": settings.trial_days,
     }
 
 
-@app.post("/v1/chat", dependencies=[Depends(require_api_key)], response_model=ChatResponse)
-async def chat(req: ChatRequest, request: Request):
+@app.get("/v1/me")
+async def me(auth: AuthContext = Depends(require_auth)):
+    if auth.user is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="This endpoint requires user auth (HELIX_AUTH_MODE=firebase).",
+        )
+    return auth.user.to_public_dict()
+
+
+def _enforce_trial(auth: AuthContext) -> None:
+    if auth.mode != "firebase":
+        return
+    user = auth.user
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
+    if user.trial_active:
+        return
+    raise HTTPException(
+        status_code=status.HTTP_402_PAYMENT_REQUIRED,
+        detail={
+            "error": "trial_expired",
+            "message": "Your free trial has ended. Please upgrade to continue.",
+            "trial_ends_at": user.to_public_dict().get("trial_ends_at"),
+        },
+    )
+
+
+@app.post("/v1/chat", response_model=ChatResponse)
+async def chat(req: ChatRequest, request: Request, auth: AuthContext = Depends(require_auth)):
     model = req.model or settings.model
     temperature = settings.temperature if req.temperature is None else req.temperature
 
@@ -116,6 +152,8 @@ async def chat(req: ChatRequest, request: Request):
     )
     if settings.log_request_body:
         logger.info("chat.request.body %s", req.model_dump_json())
+
+    _enforce_trial(auth)
 
     if settings.dry_run:
         logger.info("chat.dry_run enabled=true")
@@ -147,6 +185,8 @@ async def chat(req: ChatRequest, request: Request):
     merged_metadata = dict(req.metadata or {})
     if rid and "request_id" not in merged_metadata:
         merged_metadata["request_id"] = rid
+    if auth.user is not None and "user_id" not in merged_metadata:
+        merged_metadata["user_id"] = auth.user.uid
 
     result = await provider.generate(
         input_messages=input_messages,

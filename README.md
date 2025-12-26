@@ -95,8 +95,14 @@ export HELIX_MODEL='gpt-5.2'  # Default model
 
 # For API service
 export OPENAI_BASE_URL='https://api.openai.com/v1'  # OpenAI base URL
-export HELIX_ACCESS_MODE='public'  # or 'private' for API key auth
-export HELIX_API_KEY='your-service-api-key'  # Required if access_mode=private
+export HELIX_AUTH_MODE='public'  # public | api_key | firebase
+# If using api_key mode:
+export HELIX_API_KEY='your-service-api-key'
+# If using firebase mode:
+export HELIX_FIREBASE_PROJECT_ID='your-firebase-project-id'  # optional but recommended
+export HELIX_FIREBASE_CREDENTIALS_FILE='/path/to/serviceAccountKey.json'  # or use ADC on Cloud Run
+export HELIX_TRIAL_DAYS='7'
+export HELIX_DB_PATH='helix.sqlite3'
 export HELIX_DRY_RUN='false'  # Set to 'true' to test without OpenAI calls (CLI + API)
 export LOG_FORMAT='json'  # or 'text'
 export LOG_LEVEL='INFO'  # DEBUG, INFO, WARNING, ERROR

@@ -14,7 +14,11 @@ object HelixClient {
 
     val authInterceptor = Interceptor { chain ->
       val b = chain.request().newBuilder()
-      if (apiKey.isNotEmpty()) {
+      // Prefer Firebase user token when present (HELIX_AUTH_MODE=firebase on backend).
+      val firebaseToken = AuthTokenStore.firebaseIdToken.trim()
+      if (firebaseToken.isNotEmpty()) {
+        b.addHeader("Authorization", "Bearer $firebaseToken")
+      } else if (apiKey.isNotEmpty()) {
         // Backend supports either Authorization Bearer or X-API-Key
         b.addHeader("Authorization", "Bearer $apiKey")
       }
