@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
 import time
 import uuid
 from typing import Any, Dict, List, Literal, Optional
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 
@@ -97,6 +100,12 @@ async def _openai_reply(messages: List[Dict[str, str]], temperature: float) -> s
 
 app = FastAPI(title="Triple-Helix Chatbot API", version="0.1.0")
 
+# Serve a tiny web UI from /static
+_ROOT = Path(__file__).resolve().parent
+_STATIC_DIR = _ROOT / "static"
+if _STATIC_DIR.exists():
+    app.mount("/static", StaticFiles(directory=str(_STATIC_DIR)), name="static")
+
 # Allow browser-based clients by default (can be tightened via env later).
 app.add_middleware(
     CORSMiddleware,
@@ -108,6 +117,14 @@ app.add_middleware(
 
 # Simple in-memory session store (best-effort; not durable).
 _SESSIONS: Dict[str, List[ChatMessage]] = {}
+
+
+@app.get("/")
+def index() -> FileResponse:
+    index_file = _STATIC_DIR / "index.html"
+    if not index_file.exists():
+        raise HTTPException(status_code=404, detail="UI not found. Missing static/index.html")
+    return FileResponse(index_file)
 
 
 @app.get("/health")

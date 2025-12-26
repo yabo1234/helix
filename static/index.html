@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Triple-Helix Chatbot</title>
+    <style>
+      :root { color-scheme: light dark; }
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; }
+      .wrap { max-width: 980px; margin: 0 auto; padding: 18px; }
+      header { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+      header h1 { font-size: 18px; margin: 0; }
+      header small { opacity: .75; }
+      .grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 14px; }
+      textarea { width: 100%; min-height: 120px; padding: 10px; border-radius: 10px; border: 1px solid rgba(127,127,127,.35); }
+      button { padding: 10px 14px; border-radius: 10px; border: 1px solid rgba(127,127,127,.35); cursor: pointer; }
+      button:disabled { opacity: .6; cursor: not-allowed; }
+      .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+      pre { white-space: pre-wrap; word-break: break-word; padding: 12px; border-radius: 12px; border: 1px solid rgba(127,127,127,.35); margin: 0; }
+      .meta { opacity: .75; font-size: 12px; }
+      .pill { display: inline-block; padding: 2px 8px; border: 1px solid rgba(127,127,127,.35); border-radius: 999px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <h1>Triple-Helix Chatbot</h1>
+        <small>University · Industry · Government</small>
+      </header>
+
+      <div class="grid">
+        <div class="meta">
+          Tip: Try “Triple helix education plan for secondary schools in [CITY], focusing on teacher training + EdTech.”
+        </div>
+
+        <textarea id="prompt" placeholder="Type your request..."></textarea>
+
+        <div class="row">
+          <button id="send">Send</button>
+          <span class="meta">Session: <span id="sid" class="pill">(new)</span></span>
+          <span class="meta">Provider: <span id="provider" class="pill">?</span></span>
+        </div>
+
+        <pre id="out">Ready.</pre>
+      </div>
+    </div>
+
+    <script>
+      const promptEl = document.getElementById("prompt");
+      const outEl = document.getElementById("out");
+      const sendEl = document.getElementById("send");
+      const sidEl = document.getElementById("sid");
+      const providerEl = document.getElementById("provider");
+
+      let sessionId = null;
+
+      async function send() {
+        const text = (promptEl.value || "").trim();
+        if (!text) return;
+
+        sendEl.disabled = true;
+        outEl.textContent = "Thinking...";
+
+        try {
+          const resp = await fetch("/chat", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              session_id: sessionId,
+              messages: [{ role: "user", content: text }],
+            }),
+          });
+
+          const data = await resp.json();
+          if (!resp.ok) {
+            throw new Error(data?.detail || "Request failed");
+          }
+
+          sessionId = data.session_id;
+          sidEl.textContent = sessionId;
+          providerEl.textContent = data.provider;
+          outEl.textContent = data.reply || "";
+        } catch (e) {
+          outEl.textContent = "Error: " + (e?.message || String(e));
+        } finally {
+          sendEl.disabled = false;
+        }
+      }
+
+      sendEl.addEventListener("click", send);
+      promptEl.addEventListener("keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") send();
+      });
+    </script>
+  </body>
+</html>
+
