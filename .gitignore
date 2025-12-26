@@ -16,3 +16,13 @@ transcripts/
 build/
 dist/
 *.egg-info/
+
+# Android / Gradle / IntelliJ
+.idea/
+*.iml
+.gradle/
+local.properties
+**/build/
+**/.externalNativeBuild/
+**/.cxx/
+.kotlin/

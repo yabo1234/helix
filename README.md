@@ -216,6 +216,7 @@ Your Android app should call the **REST API** (don’t try to run the Python ser
     - `X-API-Key: <HELIX_API_KEY>`
 
 See `docs/android.md` for a complete Retrofit example (request/response models + call).
+If you want a ready-made Android Studio project, open the sample app in `android/`.
 
 ## Docker Deployment
 
