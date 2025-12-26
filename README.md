@@ -203,6 +203,20 @@ curl -X POST http://localhost:8080/v1/chat \
 }
 ```
 
+## Android (mobile) integration
+
+Your Android app should call the **REST API** (don’t try to run the Python service inside the APK).
+
+- **Endpoint**: `POST /v1/chat`
+- **OpenAPI**: `GET /openapi.json` (FastAPI default)
+- **Auth**:
+  - **public mode** (`HELIX_ACCESS_MODE=public`): no auth header
+  - **private mode** (`HELIX_ACCESS_MODE=private`): send either
+    - `Authorization: Bearer <HELIX_API_KEY>` **or**
+    - `X-API-Key: <HELIX_API_KEY>`
+
+See `docs/android.md` for a complete Retrofit example (request/response models + call).
+
 ## Docker Deployment
 
 Build the Docker image:
