@@ -1,0 +1,42 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: helix
+spec:
+  template:
+    metadata:
+      annotations:
+        run.googleapis.com/execution-environment: gen2
+        # Set ingress according to your needs:
+        # - all: public internet
+        # - internal: VPC only
+        # - internal-and-cloud-load-balancing: behind external HTTPS LB
+        run.googleapis.com/ingress: all
+    spec:
+      containerConcurrency: 80
+      timeoutSeconds: 300
+      containers:
+        - image: gcr.io/PROJECT_ID/helix:latest
+          ports:
+            - name: http1
+              containerPort: 8080
+          env:
+            - name: PORT
+              value: "8080"
+            - name: OPENAI_API_KEY
+              value: "REPLACE_ME"
+            - name: HELIX_MODEL
+              value: "gpt-5.2"
+            - name: HELIX_DRY_RUN
+              value: "false"
+            # App-level public/private toggle:
+            # - public: no app auth
+            # - private: require Authorization: Bearer $HELIX_API_KEY (or X-API-Key)
+            - name: HELIX_ACCESS_MODE
+              value: "public"
+            - name: HELIX_API_KEY
+              value: "REPLACE_ME_IF_PRIVATE"
+            - name: LOG_FORMAT
+              value: "json"
+            - name: LOG_LEVEL
+              value: "INFO"
