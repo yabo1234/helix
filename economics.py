@@ -132,8 +132,9 @@ into your responses when applicable, and cite them appropriately."""
         # Prepare messages for API call
         messages = [{"role": "system", "content": self.system_prompt}]
         
-        # Add PDF context if available (only on first message or when relevant)
-        if self.pdf_context and len(self.conversation_history) <= 2:
+        # Add PDF context if available (only on first few messages to avoid token limits)
+        # conversation_history contains [user1, bot1, user2, bot2, ...] so check if <= 3 messages
+        if self.pdf_context and len(self.conversation_history) <= 3:
             messages.append({
                 "role": "system",
                 "content": f"Additional context from provided documents:\n{self.pdf_context[:8000]}"  # Limit context size
