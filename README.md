@@ -11,6 +11,7 @@ This repo implements a **full-stack agent system** to market and sell business-a
 - **Checkout**: order creation + promo discounts + payment webhooks (Stripe or mock mode)
 - **Digital downloads**: **expiring signed URLs** for purchased assets (demo signing; S3 signing placeholder)
 - **Leads**: capture lead details and optionally send to webhook/Slack
+- **Email**: optional SendGrid order confirmation emails (logs to console when unconfigured)
 - **Security basics**: bcrypt password hashing, JWT auth, input validation (Zod), rate limiting
 - **GDPR**: best-effort “delete my data” endpoint
 - **Tests**: backend API tests (chat intents, checkout+webhook, signed downloads) + frontend smoke test
