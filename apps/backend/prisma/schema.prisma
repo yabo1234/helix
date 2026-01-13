@@ -1,0 +1,155 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  CUSTOMER
+}
+
+enum ProductType {
+  digital
+  consulting
+}
+
+enum PromoType {
+  percent
+  fixed
+}
+
+enum OrderStatus {
+  pending
+  paid
+  failed
+  refunded
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  role         UserRole @default(CUSTOMER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  orders Order[]
+}
+
+model Category {
+  id    String @id @default(uuid())
+  name  String
+  slug  String @unique
+  products Product[]
+}
+
+model Tag {
+  id   String @id @default(uuid())
+  name String @unique
+  products ProductTag[]
+}
+
+model Product {
+  id          String      @id
+  title       String
+  description String      @default("")
+  type        ProductType
+  industry    String?
+  currency    String      @default("USD")
+  priceCents  Int
+  stock       Int?
+  active      Boolean     @default(true)
+
+  // Business-analysis specific metadata (difficulty, estimated_hours, template_type, etc.)
+  metadata Json?
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  tags    ProductTag[]
+  assets  ProductAsset[]
+  orderItems OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProductAsset {
+  id        String   @id @default(uuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  label     String
+  url       String
+  mimeType  String?
+  createdAt DateTime @default(now())
+}
+
+model ProductTag {
+  productId String
+  tagId     String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([productId, tagId])
+}
+
+model PromoCode {
+  code            String    @id
+  type            PromoType
+  amount          Int
+  currency        String?
+  active          Boolean   @default(true)
+  startsAt        DateTime?
+  endsAt          DateTime?
+  maxRedemptions  Int?
+  redemptionsCount Int      @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Order {
+  id               String      @id @default(uuid())
+  userId           String?
+  user             User?       @relation(fields: [userId], references: [id])
+  email            String
+  status           OrderStatus @default(pending)
+  currency         String      @default("USD")
+  subtotalCents    Int
+  discountCents    Int         @default(0)
+  totalCents       Int
+  promoCode        String?
+  paymentProvider  String      @default("mock")
+  checkoutSessionId String?
+  paymentIntentId  String?
+
+  items     OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderItem {
+  id            String  @id @default(uuid())
+  orderId       String
+  productId     String
+  titleSnapshot String
+  unitPriceCents Int
+  quantity      Int     @default(1)
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+}
+
+model Lead {
+  id        String   @id @default(uuid())
+  name      String?
+  email     String
+  message   String
+  source    String   @default("chat")
+  createdAt DateTime @default(now())
+}
+
