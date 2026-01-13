@@ -1,0 +1,27 @@
+{
+  "name": "workspace",
+  "version": "1.0.0",
+  "description": "Business analysis agent storefront (chat + admin + checkout).",
+  "private": true,
+  "workspaces": [
+    "apps/backend",
+    "apps/frontend"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @helix/backend & npm run dev -w @helix/frontend",
+    "build": "npm run build -w @helix/backend && npm run build -w @helix/frontend",
+    "test": "npm run test -w @helix/backend && npm run test -w @helix/frontend",
+    "lint": "npm run lint -w @helix/backend && npm run lint -w @helix/frontend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yabo1234/helix.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yabo1234/helix/issues"
+  },
+  "homepage": "https://github.com/yabo1234/helix#readme"
+}
