@@ -5,8 +5,11 @@ import morgan from "morgan";
 import rateLimit from "express-rate-limit";
 
 import { healthRouter } from "./routes/health.js";
+import { authMiddleware } from "./middleware/auth.js";
+import { createDefaultDeps, type Deps } from "./deps.js";
+import { createApiRouter } from "./routes/api.js";
 
-export function createApp() {
+export function createApp(deps: Deps = createDefaultDeps()) {
   const app = express();
 
   app.use(helmet());
@@ -17,7 +20,6 @@ export function createApp() {
     })
   );
   app.use(morgan("dev"));
-  app.use(express.json({ limit: "1mb" }));
   app.use(
     rateLimit({
       windowMs: 60_000,
@@ -26,9 +28,23 @@ export function createApp() {
       legacyHeaders: false
     })
   );
+  app.use(authMiddleware);
+
+  // Stripe webhooks need the *raw* request body.
+  app.use("/api/webhooks/payments", express.raw({ type: "*/*" }));
+  app.use(express.json({ limit: "1mb" }));
 
   app.get("/", (_req, res) => res.json({ ok: true, service: "helix-backend" }));
   app.use("/api/health", healthRouter);
+  app.use("/api", createApiRouter(deps));
+
+  // Basic error boundary
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+    // eslint-disable-next-line no-console
+    console.error(err);
+    res.status(500).json({ error: "internal_error" });
+  });
 
   return app;
 }

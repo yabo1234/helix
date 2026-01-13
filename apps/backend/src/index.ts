@@ -1,5 +1,7 @@
 import { createApp } from "./app.js";
-import { env } from "./config/env.js";
+import { env, requireEnvKeys } from "./config/env.js";
+
+requireEnvKeys(["DATABASE_URL", "JWT_SECRET", "DOWNLOAD_SIGNING_SECRET"]);
 
 const app = createApp();
 
