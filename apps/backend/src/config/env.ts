@@ -17,9 +17,9 @@ const EnvSchema = z.object({
   STRIPE_WEBHOOK_SECRET: z.string().optional().default(""),
   PUBLIC_APP_URL: z.string().url().optional().default("http://localhost:5173"),
   SENDGRID_API_KEY: z.string().optional().default(""),
-  SUPPORT_ESCALATION_EMAIL: z.string().email().optional().default(""),
-  LEAD_WEBHOOK_URL: z.string().url().optional().default(""),
-  SLACK_WEBHOOK_URL: z.string().url().optional().default("")
+  SUPPORT_ESCALATION_EMAIL: z.union([z.string().email(), z.literal("")]).optional().default(""),
+  LEAD_WEBHOOK_URL: z.union([z.string().url(), z.literal("")]).optional().default(""),
+  SLACK_WEBHOOK_URL: z.union([z.string().url(), z.literal("")]).optional().default("")
 });
 
 export type Env = z.infer<typeof EnvSchema>;
