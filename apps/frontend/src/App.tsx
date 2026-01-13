@@ -1,35 +1,50 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Link, Route, Routes } from "react-router-dom";
+import "./App.css";
+import { useAuthToken } from "./auth";
+import { HomePage } from "./pages/HomePage";
+import { ProductPage } from "./pages/ProductPage";
+import { CheckoutPage } from "./pages/CheckoutPage";
+import { CheckoutSuccessPage } from "./pages/CheckoutSuccessPage";
+import { CheckoutCancelPage } from "./pages/CheckoutCancelPage";
+import { AdminLoginPage } from "./pages/admin/AdminLoginPage";
+import { AdminProductsPage } from "./pages/admin/AdminProductsPage";
+import { AdminPromosPage } from "./pages/admin/AdminPromosPage";
+import { AdminOrdersPage } from "./pages/admin/AdminOrdersPage";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const { token, setToken } = useAuthToken();
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="container">
+      <header className="header">
+        <div className="brand">
+          <Link to="/">Helix BA Shop</Link>
+        </div>
+        <nav className="nav">
+          <Link to="/">Chat</Link>
+          <Link to="/admin">Admin</Link>
+          {token ? (
+            <button className="linkButton" onClick={() => setToken(null)}>
+              Sign out
+            </button>
+          ) : (
+            <span className="muted">Not signed in</span>
+          )}
+        </nav>
+      </header>
 
-export default App
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/products/:id" element={<ProductPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
+        <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
+
+        <Route path="/admin" element={<AdminLoginPage />} />
+        <Route path="/admin/products" element={<AdminProductsPage />} />
+        <Route path="/admin/promos" element={<AdminPromosPage />} />
+        <Route path="/admin/orders" element={<AdminOrdersPage />} />
+      </Routes>
+    </div>
+  );
+}
