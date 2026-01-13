@@ -1,0 +1,70 @@
+{
+  "info": {
+    "name": "Helix BA Storefront API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3001"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/health"
+      }
+    },
+    {
+      "name": "Chat Recommend",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "content-type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/chat/recommend",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message\": \"I need templates for stakeholder mapping and ROI modeling.\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Auth Signup",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "content-type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/auth/signup",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"buyer@example.com\",\n  \"password\": \"password123\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Create Checkout Session",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "content-type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/checkout/session",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"buyer@example.com\",\n  \"currency\": \"USD\",\n  \"promoCode\": \"SAVE20\",\n  \"items\": [{\"productId\":\"prod_001\",\"quantity\":1}]\n}"
+        }
+      }
+    },
+    {
+      "name": "Mock Webhook Mark Paid",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "content-type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/webhooks/payments",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"type\": \"checkout.session.completed\",\n  \"orderId\": \"ORDER_ID_HERE\",\n  \"checkoutSessionId\": \"mock_cs_...\"\n}"
+        }
+      }
+    }
+  ]
+}
+

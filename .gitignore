@@ -4,4 +4,3 @@ dist
 .DS_Store
 .vite
 coverage
-apps/backend/prisma/migrations
