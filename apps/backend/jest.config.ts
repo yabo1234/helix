@@ -6,7 +6,7 @@ const config: Config = {
     "^.+\\.(t|j)sx?$": [
       "ts-jest",
       {
-        tsconfig: "tsconfig.json",
+        tsconfig: "tsconfig.test.json",
         useESM: true
       }
     ]
