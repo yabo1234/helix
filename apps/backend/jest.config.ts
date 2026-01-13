@@ -11,6 +11,9 @@ const config: Config = {
       }
     ]
   },
+  moduleNameMapper: {
+    "^(\\.{1,2}/.*)\\.js$": "$1"
+  },
   extensionsToTreatAsEsm: [".ts"],
   testMatch: ["**/test/**/*.test.ts"]
 };
