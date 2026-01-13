@@ -1,5 +1,6 @@
 import { Router } from "express";
 import type { Deps } from "../deps.js";
+import { sendOrderConfirmationEmail } from "../notifications/email.js";
 
 export function paymentsWebhookRouter(deps: Deps) {
   const r = Router();
@@ -11,12 +12,14 @@ export function paymentsWebhookRouter(deps: Deps) {
     const events = await deps.payments.parseWebhook({ rawBody, signatureHeader });
     for (const evt of events) {
       if (evt.type === "checkout.session.completed") {
-        await deps.store.updateOrderStatus({
+        const updated = await deps.store.updateOrderStatus({
           orderId: evt.orderId,
           status: "paid",
           checkoutSessionId: evt.checkoutSessionId,
           paymentIntentId: evt.paymentIntentId ?? null
         });
+        // Best-effort order confirmation email
+        void sendOrderConfirmationEmail(updated).catch(() => {});
       }
       if (evt.type === "payment.failed") {
         await deps.store.updateOrderStatus({

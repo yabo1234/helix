@@ -21,6 +21,7 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^6.2.1",
+    "@sendgrid/mail": "^8.1.6",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -48,8 +49,7 @@
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
-  }
-  ,
+  },
   "prisma": {
     "seed": "node --loader ts-node/esm prisma/seed.ts"
   }
