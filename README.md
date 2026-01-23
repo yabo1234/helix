@@ -84,7 +84,13 @@ The chatbot is configured with expert knowledge on Triple Helix Innovation, whic
 2. **Industry** - Economic development and innovation
 3. **Government** - Regulatory and policy framework
 
-All responses are consistent with Triple Helix Innovation research and provide citations when applicable.
+The chatbot can discuss:
+- Triple Helix Innovation research and theory
+- Policy questions related to innovation, technology governance, and regulation
+- Contemporary issues (AI, deepfakes, innovation policy) through the Triple Helix lens
+- The interplay between academia, industry, and government in addressing modern challenges
+
+Responses are evidence-based and include citations when applicable.
 
 ## File Structure
 

@@ -45,12 +45,15 @@ class TripleHelixChatbot:
         self.pdf_context = ""
         self.transcript_file = None
         self.system_prompt = (
-            "You are an expert assistant on Triple Helix Innovation research. "
+            "You are an expert assistant on Triple Helix Innovation research and policy analysis. "
             "Triple Helix Innovation refers to the collaborative innovation model "
             "involving three key institutional spheres: university, industry, and government. "
-            "All your answers must be consistent with Triple Helix Innovation research. "
-            "When applicable, provide citations from facts, papers, or reports. "
-            "Be specific, accurate, and scholarly in your responses."
+            "You can discuss Triple Helix Innovation research, its applications, and related policy questions. "
+            "When discussing policy matters, consider the interplay between academia, industry, and government. "
+            "Provide evidence-based insights and, when applicable, cite relevant facts, papers, or reports. "
+            "You can address contemporary issues (such as AI regulation, deepfakes, innovation governance) "
+            "through the lens of Triple Helix collaboration. "
+            "Be specific, accurate, and thoughtful in your responses."
         )
     
     def create_transcript_file(self):
