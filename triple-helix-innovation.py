@@ -289,7 +289,7 @@ class TripleHelixChatbot:
         if self.transcript_file:
             try:
                 self.transcript_file.close()
-            except:
+            except (OSError, Exception):
                 pass
 
 
