@@ -51,10 +51,17 @@ export OPENAI_API_KEY='your-api-key-here'
 
 Or run directly:
 ```bash
+export OPENAI_API_KEY='your-api-key-here'
 python3 web_interface.py
 ```
 
 Then open your browser and navigate to: **http://localhost:5000**
+
+**⚠️ Connection Issues?** See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) for solutions to common problems like:
+- "localhost refused to connect"
+- Port already in use
+- Missing dependencies
+- API key not set
 
 The web interface provides:
 - Modern, user-friendly chat interface with gradient design
