@@ -4,14 +4,18 @@ An AI-powered chatbot specifically designed to interact with users on the topic 
 
 ## Features
 
-1. **Welcome Message**: Greets users with "Welcome to the Triple Helix Innovation chatbot."
-2. **OpenAI Integration**: Uses GPT-3.5-turbo with custom context emphasizing Triple Helix Innovation research
-3. **PDF Context Support**: 
-   - Prompts users to provide a directory containing up to 2 PDF files
+1. **Web Interface**: Modern, user-friendly browser-based chat interface with real-time conversation
+2. **Command-Line Interface**: Traditional CLI for terminal-based interaction
+3. **Welcome Message**: Greets users with "Welcome to the Triple Helix Innovation chatbot."
+4. **OpenAI Integration**: Uses GPT-3.5-turbo with custom context emphasizing Triple Helix Innovation research and policy analysis
+5. **PDF Context Support**: 
+   - Prompts users to provide a directory containing up to 2 PDF files (CLI mode)
    - Extracts and includes PDF text content in the chatbot context
-4. **Interactive CLI**: Text-only command prompt interface for seamless interaction
-5. **Chat Logging**: Automatically saves all interactions to timestamped transcript files
-6. **Robust Error Handling**: Comprehensive error handling throughout the application
+6. **Policy Analysis**: Analyzes contemporary issues (AI regulation, deepfakes, innovation governance) through Triple Helix lens
+7. **Chat History**: Maintains conversation context (last 10 messages) for coherent dialogue
+8. **Chat Logging**: Automatically saves all interactions to timestamped transcript files (CLI mode)
+9. **Robust Error Handling**: Comprehensive error handling throughout the application
+10. **Responsive Design**: Web interface works on desktop and mobile devices
 
 ## Requirements
 
@@ -38,7 +42,32 @@ export OPENAI_API_KEY='your-api-key-here'
 
 ## Usage
 
-Run the chatbot:
+### Web Interface (Recommended)
+
+**Quick Start** (automatically installs dependencies):
+```bash
+./start_web.sh
+```
+
+Or run directly:
+```bash
+python3 web_interface.py
+```
+
+Then open your browser and navigate to: **http://localhost:5000**
+
+The web interface provides:
+- Modern, user-friendly chat interface with gradient design
+- Real-time conversation with the chatbot
+- Automatic conversation history management
+- Typing indicators for better UX
+- Clear chat functionality
+- Responsive design for desktop and mobile
+- Beautiful visual design with smooth animations
+
+### Command Line Interface
+
+Run the chatbot in terminal:
 ```bash
 python3 triple-helix-innovation.py
 ```
@@ -155,11 +184,15 @@ See `examples/deepfake_policy_guidance.md` for a comprehensive policy framework 
 
 ```
 helix/
-├── triple-helix-innovation.py         # Main chatbot script
+├── start_web.sh                        # Quick start script for web interface
+├── web_interface.py                    # Web-based chatbot interface (Flask)
+├── triple-helix-innovation.py         # Command-line chatbot script
 ├── demo_policy_analysis.py            # Demo showing policy analysis capabilities
 ├── requirements.txt                    # Python dependencies
 ├── .gitignore                          # Git ignore rules
 ├── README.md                           # This file
+├── templates/
+│   └── index.html                      # Web interface HTML template
 └── examples/
     └── deepfake_policy_guidance.md    # Example policy framework document
 ```
@@ -168,6 +201,8 @@ helix/
 
 - `openai==0.28.1` - OpenAI Python library
 - `PyPDF2==3.0.1` - PDF text extraction
+- `flask==2.3.3` - Web framework for web interface
+- `flask-session==0.5.0` - Session management for web interface
 
 ## License
 

@@ -1,6 +1,9 @@
 # Chat transcripts
 chat_transcript_*.txt
 
+# Flask session files
+flask_session/
+
 # Python
 __pycache__/
 *.py[cod]
