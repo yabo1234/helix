@@ -39,21 +39,16 @@ def chat_fn(message: str, history: list[dict[str, str]]):
 
 
 def build_ui() -> gr.Blocks:
-    with gr.Blocks(title=APP_TITLE, theme=gr.themes.Soft()) as demo:
+    with gr.Blocks(title=APP_TITLE) as demo:
         gr.Markdown(f"## {APP_TITLE}\n\n{APP_DESCRIPTION}")
 
         gr.ChatInterface(
             fn=chat_fn,
-            type="messages",
-            chatbot=gr.Chatbot(height=420, show_copy_button=True),
+            chatbot=gr.Chatbot(height=420),
             textbox=gr.Textbox(
                 placeholder="Describe your innovation challenge or idea…",
                 lines=2,
             ),
-            submit_btn="Send",
-            retry_btn="Retry",
-            undo_btn="Undo",
-            clear_btn="Clear",
             examples=[
                 "Help me design a university–startup–government pilot for renewable energy forecasting.",
                 "How do I structure a consortium for an AI healthcare product while staying compliant?",
@@ -75,5 +70,8 @@ def build_ui() -> gr.Blocks:
 if __name__ == "__main__":
     demo = build_ui()
     port = int(os.environ.get("PORT", "7860"))
-    demo.launch(server_name="0.0.0.0", server_port=port, show_api=False)
+    demo.launch(
+        server_name="0.0.0.0",
+        server_port=port
+    )
 
