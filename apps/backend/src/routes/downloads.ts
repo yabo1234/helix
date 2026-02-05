@@ -3,6 +3,7 @@ import { z } from "zod";
 import type { Deps } from "../deps.js";
 import { requireAuth, type AuthedRequest } from "../middleware/auth.js";
 import { signDownloadToken, verifyDownloadToken } from "../downloads/signing.js";
+import { presignS3GetObject } from "../downloads/s3.js";
 
 const SignedUrlQuerySchema = z.object({
   ttlSeconds: z.coerce.number().int().positive().max(60 * 60).optional().default(15 * 60)
@@ -45,8 +46,10 @@ export function downloadsRouter(deps: Deps) {
     if (!owns) return res.status(403).json({ error: "not_purchased" });
 
     if (asset.url.startsWith("s3://")) {
-      // Placeholder: in a real deployment, this would issue an S3 pre-signed URL.
-      return res.json({ mode: "placeholder", assetUrl: asset.url, message: "Configure S3 signing for production." });
+      const remainingSeconds = Math.max(1, Math.floor(payload.exp - Date.now() / 1000));
+      const signedUrl = await presignS3GetObject(asset.url, { expiresInSeconds: remainingSeconds });
+      if (!signedUrl) return res.status(500).json({ error: "s3_signing_failed" });
+      return res.redirect(signedUrl);
     }
 
     return res.redirect(asset.url);
