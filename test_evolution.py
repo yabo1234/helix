@@ -70,6 +70,28 @@ def test_other_intents_unchanged():
         print(f"{status} Query: '{query}' -> {intent} (expected: {expected})")
 
 
+def test_no_false_positives():
+    """Test that evolution keywords don't cause false positives in other contexts."""
+    test_cases = [
+        ("I need funding to develop a theory about partnerships", "funding"),
+        ("Our research prototype is in the movement stage", "research"),
+        ("What policy theory should we follow?", "policy"),
+        ("The origins of our startup idea", "commercialization"),
+    ]
+    
+    print("\nTesting no false positives for evolution keywords...\n")
+    for query, expected in test_cases:
+        result = generate_reply(query)
+        intent = result.meta['intent']
+        # Intent should NOT be evolution
+        not_evolution = intent != "evolution"
+        status = "✓" if not_evolution else "✗"
+        print(f"{status} Query: '{query}' -> {intent} (should not be evolution)")
+        if intent == "evolution":
+            print(f"   WARNING: False positive detected!")
+
+
+
 if __name__ == "__main__":
     print("=" * 60)
     print("Triple Helix Evolution Feature Test")
@@ -79,6 +101,7 @@ if __name__ == "__main__":
     test_evolution_intent()
     test_evolution_response()
     test_other_intents_unchanged()
+    test_no_false_positives()
     
     print("\n" + "=" * 60)
     print("All tests completed!")

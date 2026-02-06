@@ -30,7 +30,11 @@ def _triage_intent(message: str) -> str:
         return "research"
     if any(k in m for k in ("partnership", "mou", "consortium", "collaboration", "stakeholder")):
         return "partnership"
-    if any(k in m for k in ("evolution", "history", "metaphor", "theory", "movement", "origins", "development")):
+    # More specific check for evolution - require multiple signals or explicit terms
+    evolution_keywords = ("evolution", "history", "origins", "development")
+    phase_keywords = ("metaphor", "theory", "movement")
+    if (any(k in m for k in evolution_keywords) or 
+        (any(k in m for k in phase_keywords) and any(t in m for t in ("triple", "helix", "model", "concept")))):
         return "evolution"
     return "general"
 
