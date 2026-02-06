@@ -21,3 +21,4 @@ Then open the Gradio link printed in the terminal (default port: `7860`).
 
 - `app.py`: Gradio chat UI
 - `triple_helix_engine.py`: lightweight reply engine (swap this with an LLM/API later)
+- `TRIPLE_HELIX_EVOLUTION.md`: comprehensive documentation on the evolution of Triple Helix innovation from metaphor to theory to movement
