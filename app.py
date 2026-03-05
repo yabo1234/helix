@@ -42,6 +42,7 @@ def build_ui() -> gr.Blocks:
                 "Help me design a university–startup–government pilot for renewable energy forecasting.",
                 "How do I structure a consortium for an AI healthcare product while staying compliant?",
                 "I want funding for a smart agriculture prototype. What should the proposal include?",
+                "Create a video ad script for JF MOTORES car sales company in Finfinne city.",
             ],
         )
 
