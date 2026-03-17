@@ -9,6 +9,7 @@ The script displays:
 - Current date and time (UTC)
 - Current user login information
 - Triple Helix innovation model visualization
+- Objectives of the Triple Helix innovation model
 """
 
 import datetime
@@ -28,6 +29,42 @@ def get_current_user():
         return getpass.getuser()
     except Exception:
         return os.environ.get('USER', 'unknown')
+
+
+def display_triple_helix_objectives():
+    """Display the objectives of the Triple Helix innovation model."""
+    print("\n" + "="*70)
+    print("TRIPLE HELIX INNOVATION OBJECTIVES".center(70))
+    print("="*70)
+    print("""
+    The Triple Helix model is an OBJECTIVE-BASED framework with key goals:
+    
+    PRIMARY OBJECTIVES:
+    
+    1. KNOWLEDGE GENERATION & TRANSFER
+       → Facilitate continuous flow of knowledge between spheres
+       → Transform academic research into practical applications
+       
+    2. ECONOMIC DEVELOPMENT & COMPETITIVENESS
+       → Drive regional and national economic growth
+       → Enhance innovation capacity and global competitiveness
+       
+    3. COLLABORATIVE INNOVATION ECOSYSTEM
+       → Create synergies through multi-stakeholder partnerships
+       → Build innovation spaces (tech parks, incubators, clusters)
+       
+    4. SOCIAL PROBLEM SOLVING
+       → Address societal challenges through innovation
+       → Ensure innovation benefits broader society
+       
+    5. SUSTAINABLE GROWTH
+       → Balance economic, social, and environmental objectives
+       → Foster long-term sustainable development
+    
+    The model aims to create a self-reinforcing cycle where each sphere
+    contributes its unique capabilities toward shared innovation objectives.
+    """)
+    print("="*70)
 
 
 def display_triple_helix_model():
@@ -82,6 +119,9 @@ def main():
     
     # Display the Triple Helix model
     display_triple_helix_model()
+    
+    # Display the objectives of the Triple Helix model
+    display_triple_helix_objectives()
     
     # Additional information
     print("\nScript execution completed successfully!")
