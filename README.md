@@ -19,18 +19,20 @@ Then open the Gradio link printed in the terminal (default port: `7860`).
 
 ### Share with your team via Netlify
 
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/yabo1234/helix)
+
 The `public/` folder contains a static HTML page (`index.html`) that describes the chatbot and guides reviewers. A `netlify.toml` in the repo root configures Netlify to serve this page automatically.
 
 #### Steps
 
-1. **Connect this repo to Netlify**
-   Go to [app.netlify.com](https://app.netlify.com) → *Add new site → Import an existing project* → select `yabo1234/helix`.
+1. **One-click deploy**
+   Click the **Deploy to Netlify** button above. Netlify will fork this repo to your account and deploy the static showcase page automatically.
 
-2. **Build settings are auto-detected**
-   Netlify reads `netlify.toml`; the publish directory is `public/` and no build command is needed.
+2. **Or connect manually**
+   Go to [app.netlify.com](https://app.netlify.com) → *Add new site → Import an existing project* → select `yabo1234/helix`. Netlify reads `netlify.toml`; the publish directory is `public/` and no build command is needed.
 
-3. **Deploy**
-   Click *Deploy site*. Netlify gives you a URL like `https://your-site-name.netlify.app`. Share this link with your team.
+3. **Share the URL**
+   Netlify gives you a URL like `https://your-site-name.netlify.app`. Share this link with your team.
 
 4. **Enable team commenting**
    In the Netlify dashboard go to *Site settings → Collaboration → Deploy Previews* and enable the **Netlify Drawer**. Team members can open the live URL, click the Netlify icon in the bottom-left corner, and leave inline comments directly on the page.

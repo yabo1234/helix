@@ -265,31 +265,36 @@ pip install -r requirements.txt</pre>
   <section class="card">
     <h2>Share with your team via Netlify</h2>
     <p>
-      This page is deployed automatically by Netlify whenever you push to the
-      main branch. Use the steps below to share the live preview with your team
-      for review and comments.
+      Click the button below to deploy this page instantly to Netlify with one click.
+      No build command is required — Netlify reads <code>netlify.toml</code> and
+      serves the <code>public/</code> folder automatically.
     </p>
-    <ol class="steps" style="margin-top:20px;">
+    <p style="margin-top:20px;">
+      <a class="deploy-btn" href="https://app.netlify.com/start/deploy?repository=https://github.com/yabo1234/helix" target="_blank" rel="noopener">
+        <img src="https://www.netlify.com/img/deploy/button.svg" alt="Deploy to Netlify" width="179" height="32" />
+      </a>
+    </p>
+    <ol class="steps" style="margin-top:24px;">
       <li>
         <div>
-          <strong>Connect this repo to Netlify</strong><br />
-          Go to <a href="https://app.netlify.com" target="_blank" rel="noopener">app.netlify.com</a>,
-          click <em>"Add new site → Import an existing project"</em>, and select
-          the <code>yabo1234/helix</code> GitHub repository.
+          <strong>One-click deploy</strong><br />
+          Click the <em>Deploy to Netlify</em> button above. Netlify will fork this
+          repo to your account and publish the showcase page automatically.
         </div>
       </li>
       <li>
         <div>
-          <strong>Configure the build settings</strong><br />
-          Netlify auto-detects <code>netlify.toml</code> in the root. The publish
-          directory is set to <code>public/</code> and no build command is needed
-          for this static page.
+          <strong>Or connect manually</strong><br />
+          Go to <a href="https://app.netlify.com" target="_blank" rel="noopener">app.netlify.com</a>
+          → <em>"Add new site → Import an existing project"</em> → select
+          <code>yabo1234/helix</code>. Netlify auto-detects <code>netlify.toml</code>
+          (publish dir = <code>public/</code>, no build command needed).
         </div>
       </li>
       <li>
         <div>
-          <strong>Deploy</strong><br />
-          Click <em>"Deploy site"</em>. Netlify generates a URL like
+          <strong>Share the generated URL</strong><br />
+          After deploying, Netlify gives you a URL like
           <code>https://your-site-name.netlify.app</code>.
           Share that link with your team.
         </div>
