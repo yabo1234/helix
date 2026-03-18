@@ -100,12 +100,12 @@
 
     /* ── Deploy & run steps ── */
     .steps { counter-reset: step; list-style: none; display: grid; gap: 16px; }
-    .steps li {
+    .steps > li {
       display: flex;
       gap: 14px;
       align-items: flex-start;
     }
-    .steps li::before {
+    .steps > li::before {
       counter-increment: step;
       content: counter(step);
       flex-shrink: 0;
@@ -117,8 +117,19 @@
       font-size: .9rem;
       display: flex; align-items: center; justify-content: center;
     }
-    .steps li div { padding-top: 4px; }
-    .steps li strong { display: block; margin-bottom: 2px; }
+    .steps > li > div { padding-top: 4px; }
+    .steps > li strong { display: block; margin-bottom: 2px; }
+    /* Nested lists inside step items — plain bullets, no counter badge */
+    .steps > li ul {
+      list-style: disc;
+      padding-left: 18px;
+      margin-top: 8px;
+      display: grid;
+      gap: 6px;
+      font-size: .92rem;
+    }
+    .steps > li ul li { display: list-item; gap: 0; align-items: unset; }
+    .steps > li ul li::before { display: none; }
     code {
       background: #eef2ff;
       border-radius: 4px;
@@ -389,10 +400,35 @@ pip install -r requirements.txt</pre>
       </li>
       <li>
         <div>
-          <strong>Share the generated URL</strong><br />
-          After deploying, Netlify gives you a URL like
-          <code>https://your-site-name.netlify.app</code>.
-          Share that link with your team.
+          <strong>Find your site URL</strong><br />
+          Your URL appears in <strong>three places</strong>:
+          <ul>
+            <li><strong>Right after deployment</strong> — the success screen highlights
+              a link like <code>https://random-name-abc123.netlify.app</code>.
+              Click it to open your live site immediately.</li>
+            <li><strong>Netlify dashboard</strong> — go to
+              <a href="https://app.netlify.com" target="_blank" rel="noopener">app.netlify.com</a>
+              → <em>Sites</em> → click your site's card → the URL is shown in bold
+              at the top of the <em>Site Overview</em> page.</li>
+            <li><strong>Netlify CLI</strong> — run <code>netlify status</code> in
+              the repo directory to print the URL to your terminal.</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>(Optional) Set a memorable URL</strong><br />
+          In the Netlify dashboard go to
+          <em>Site configuration → General → Site details → Change site name</em>.
+          Enter a slug like <code>triple-helix-chatbot</code> and your site will be
+          available at <code>https://triple-helix-chatbot.netlify.app</code>.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Share the URL with your team</strong><br />
+          Copy the URL from the Site Overview and paste it anywhere — email, Slack,
+          Notion. Every visitor gets the live interactive chat widget.
         </div>
       </li>
       <li>

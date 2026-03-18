@@ -43,10 +43,19 @@ Content-Type: application/json
 2. **Or connect manually**
    Go to [app.netlify.com](https://app.netlify.com) → *Add new site → Import an existing project* → select `yabo1234/helix`. Netlify reads `netlify.toml`; the publish directory is `public/` and no build command is needed.
 
-3. **Share the URL**
-   Netlify gives you a URL like `https://your-site-name.netlify.app`. Share this link with your team.
+3. **Find your site URL**
+   Your deployed URL appears in **three places**:
+   - **Right after deployment** — the success screen shows a highlighted link like `https://random-name-abc123.netlify.app`. Click it to open your site.
+   - **In the Netlify dashboard** — go to [app.netlify.com](https://app.netlify.com) → click **Sites** in the left sidebar → click your site's name → the URL is displayed in bold at the top of the *Site Overview* page.
+   - **Via the Netlify CLI** — run `netlify open --site` in the repo directory to open the dashboard, or `netlify status` to print the URL to the terminal.
 
-4. **Enable team commenting**
+4. **(Optional) Set a memorable URL**
+   In the Netlify dashboard go to *Site configuration → General → Site details → Change site name*. Enter a slug like `triple-helix-chatbot` and your site will be available at `https://triple-helix-chatbot.netlify.app`.
+
+5. **Share the URL**
+   Copy the URL from the Site Overview and share it with your team. All visitors will see the live interactive chat widget powered by the serverless function.
+
+6. **Enable team commenting**
    In the Netlify dashboard go to *Site settings → Collaboration → Deploy Previews* and enable the **Netlify Drawer**. Team members can open the live URL, click the Netlify icon in the bottom-left corner, and leave inline comments directly on the page.
 
 ---
