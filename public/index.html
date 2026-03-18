@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Triple-Helix Innovation Chatbot</title>
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #f4f6f9;
+      color: #222;
+      line-height: 1.6;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #1a3c6e 0%, #2d6a9f 60%, #3b9e82 100%);
+      color: #fff;
+      padding: 48px 24px 40px;
+      text-align: center;
+    }
+    header h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 10px; }
+    header p  { font-size: 1.1rem; opacity: .9; max-width: 640px; margin: 0 auto; }
+
+    /* ── Helix badge row ── */
+    .helix-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+    .helix-badge {
+      background: rgba(255,255,255,.18);
+      border: 2px solid rgba(255,255,255,.5);
+      border-radius: 999px;
+      padding: 6px 20px;
+      font-size: .9rem;
+      font-weight: 600;
+      letter-spacing: .03em;
+    }
+
+    /* ── Main content ── */
+    main {
+      max-width: 960px;
+      margin: 40px auto;
+      padding: 0 20px;
+      display: grid;
+      gap: 32px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 32px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.07);
+    }
+    .card h2 {
+      font-size: 1.3rem;
+      color: #1a3c6e;
+      margin-bottom: 16px;
+      border-left: 4px solid #2d6a9f;
+      padding-left: 10px;
+    }
+
+    /* ── Three-column helix section ── */
+    .helix-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-top: 8px;
+    }
+    .helix-col {
+      border-radius: 10px;
+      padding: 20px;
+      color: #fff;
+    }
+    .helix-col.academia   { background: #1a3c6e; }
+    .helix-col.industry   { background: #2d6a9f; }
+    .helix-col.government { background: #3b9e82; }
+    .helix-col h3 { font-size: 1rem; margin-bottom: 8px; }
+    .helix-col ul { padding-left: 18px; font-size: .9rem; opacity: .9; }
+    .helix-col li { margin-bottom: 4px; }
+
+    /* ── Example prompts ── */
+    .prompts { list-style: none; display: grid; gap: 12px; }
+    .prompts li {
+      background: #f0f5ff;
+      border-left: 4px solid #2d6a9f;
+      border-radius: 6px;
+      padding: 12px 16px;
+      font-size: .95rem;
+      font-style: italic;
+      color: #2a4a7f;
+    }
+
+    /* ── Deploy & run steps ── */
+    .steps { counter-reset: step; list-style: none; display: grid; gap: 16px; }
+    .steps li {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .steps li::before {
+      counter-increment: step;
+      content: counter(step);
+      flex-shrink: 0;
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: #2d6a9f;
+      color: #fff;
+      font-weight: 700;
+      font-size: .9rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .steps li div { padding-top: 4px; }
+    .steps li strong { display: block; margin-bottom: 2px; }
+    code {
+      background: #eef2ff;
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: .88rem;
+      color: #1a3c6e;
+    }
+    pre {
+      background: #1e2a3a;
+      color: #c8d8f0;
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: .88rem;
+      overflow-x: auto;
+      margin-top: 8px;
+    }
+
+    /* ── CTA button ── */
+    .cta {
+      display: inline-block;
+      background: #2d6a9f;
+      color: #fff;
+      text-decoration: none;
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: background .2s;
+    }
+    .cta:hover { background: #1a3c6e; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 28px 16px;
+      font-size: .85rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🔬 Triple-Helix Innovation Chatbot</h1>
+  <p>
+    A lightweight AI assistant that helps you structure innovation challenges
+    using the <strong>Academia × Industry × Government</strong> framework.
+  </p>
+  <div class="helix-row">
+    <span class="helix-badge">🎓 Academia</span>
+    <span class="helix-badge">🏭 Industry</span>
+    <span class="helix-badge">🏛️ Government</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- What it does -->
+  <section class="card">
+    <h2>What the chatbot does</h2>
+    <p>
+      The chatbot classifies your innovation question into one of five intent
+      categories — <em>funding, commercialisation, policy, research,</em> or
+      <em>partnership</em> — then returns a structured Triple-Helix response with
+      tailored clarifying questions to keep the conversation productive.
+    </p>
+
+    <div class="helix-grid" style="margin-top:24px;">
+      <div class="helix-col academia">
+        <h3>🎓 Academia</h3>
+        <ul>
+          <li>Knowledge &amp; evidence</li>
+          <li>Prototypes &amp; publications</li>
+          <li>Research de-risking</li>
+        </ul>
+      </div>
+      <div class="helix-col industry">
+        <h3>🏭 Industry</h3>
+        <ul>
+          <li>Market adoption path</li>
+          <li>ROI &amp; incentives</li>
+          <li>IP &amp; commercialisation</li>
+        </ul>
+      </div>
+      <div class="helix-col government">
+        <h3>🏛️ Government</h3>
+        <ul>
+          <li>Policy &amp; regulation</li>
+          <li>Public procurement</li>
+          <li>Funding &amp; grants</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Example prompts -->
+  <section class="card">
+    <h2>Example prompts to try</h2>
+    <ul class="prompts">
+      <li>"Help me design a university–startup–government pilot for renewable energy forecasting."</li>
+      <li>"How do I structure a consortium for an AI healthcare product while staying compliant?"</li>
+      <li>"I want funding for a smart agriculture prototype. What should the proposal include?"</li>
+    </ul>
+  </section>
+
+  <!-- How to run -->
+  <section class="card">
+    <h2>How to run the chatbot locally</h2>
+    <ol class="steps">
+      <li>
+        <div>
+          <strong>Clone the repository</strong>
+          <pre>git clone https://github.com/yabo1234/helix.git
+cd helix</pre>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Create a virtual environment &amp; install dependencies</strong>
+          <pre>python -m venv .venv
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -r requirements.txt</pre>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Start the chatbot</strong>
+          <pre>python app.py</pre>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Open in your browser</strong><br />
+          Gradio prints a local URL, e.g. <code>http://localhost:7860</code>.
+          Open it and start chatting!
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- Share with team via Netlify -->
+  <section class="card">
+    <h2>Share with your team via Netlify</h2>
+    <p>
+      This page is deployed automatically by Netlify whenever you push to the
+      main branch. Use the steps below to share the live preview with your team
+      for review and comments.
+    </p>
+    <ol class="steps" style="margin-top:20px;">
+      <li>
+        <div>
+          <strong>Connect this repo to Netlify</strong><br />
+          Go to <a href="https://app.netlify.com" target="_blank" rel="noopener">app.netlify.com</a>,
+          click <em>"Add new site → Import an existing project"</em>, and select
+          the <code>yabo1234/helix</code> GitHub repository.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Configure the build settings</strong><br />
+          Netlify auto-detects <code>netlify.toml</code> in the root. The publish
+          directory is set to <code>public/</code> and no build command is needed
+          for this static page.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Deploy</strong><br />
+          Click <em>"Deploy site"</em>. Netlify generates a URL like
+          <code>https://your-site-name.netlify.app</code>.
+          Share that link with your team.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Invite team members to comment</strong><br />
+          In the Netlify dashboard go to
+          <em>Site settings → Collaboration → Deploy Previews</em> and enable
+          the <strong>Netlify Drawer</strong>. Team members can open the live
+          URL, click the Netlify icon in the bottom-left corner, and leave
+          inline comments directly on the page.
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- Tech stack -->
+  <section class="card">
+    <h2>Tech stack</h2>
+    <ul style="padding-left:20px; font-size:.95rem; line-height:2;">
+      <li><strong>Gradio ≥ 5</strong> — chatbot UI (Python)</li>
+      <li><strong>triple_helix_engine.py</strong> — rule-based intent triage (no external APIs required)</li>
+      <li><strong>Netlify</strong> — static hosting for this showcase page</li>
+    </ul>
+    <p style="margin-top:16px; font-size:.9rem; color:#555;">
+      The Python chatbot itself runs on any machine with Python 3.9+. To deploy
+      it publicly (not just this page), consider
+      <a href="https://huggingface.co/spaces" target="_blank" rel="noopener">Hugging Face Spaces</a>
+      or <a href="https://render.com" target="_blank" rel="noopener">Render</a>,
+      both of which support Python/Gradio apps for free.
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  Triple-Helix Innovation Chatbot &mdash; deployed on Netlify &mdash;
+  <a href="https://github.com/yabo1234/helix" target="_blank" rel="noopener">View source on GitHub</a>
+</footer>
+
+</body>
+</html>
