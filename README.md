@@ -26,6 +26,20 @@ Netlify will deploy `index.html` as the static frontend and
 > If you swap `generate_reply()` for an LLM API, add your API key via
 > **Site settings → Environment variables**.
 
+### Share the URL with your team
+
+After the deploy finishes, Netlify shows your live URL at the top of the
+**"Site overview"** page (e.g. `https://your-site-name.netlify.app`).
+
+**To make the URL easy for everyone to find:**
+
+1. Copy the URL from Netlify.
+2. Open [`SITE_URL.md`](SITE_URL.md) in this repo.
+3. Replace the `https://YOUR-SITE-NAME.netlify.app` placeholder with your real URL.
+4. Commit and push the file — teammates can now find the link directly in GitHub.
+
+> See [`SITE_URL.md`](SITE_URL.md) for the current live URL and step-by-step instructions.
+
 ---
 
 ### Run locally (Gradio UI)
@@ -58,6 +72,7 @@ static site **and** runs the Python function at `/api/chat`.
 
 | Path | Description |
 |------|-------------|
+| `SITE_URL.md` | **Record the live Netlify URL here** to share with your team |
 | `index.html` | Static chat UI (deployed as the Netlify site root) |
 | `netlify.toml` | Netlify build & functions configuration |
 | `netlify/functions/chat.py` | Serverless Python function — handles `POST /api/chat` |
