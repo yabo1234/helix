@@ -1,8 +1,34 @@
-## Triple-Helix Chatbot UI
+## Triple-Helix Innovation Chatbot
 
-This repo contains a simple web UI for a **Triple-Helix chatbot** (Academia × Industry × Government).
+A lightweight web chatbot that helps you think through innovation challenges using the
+**Academia × Industry × Government (Triple Helix)** framework.
 
-### Run locally
+---
+
+### Deploy to Netlify (one-click)
+
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/yabo1234/helix)
+
+**Manual steps:**
+
+1. Fork / push this repo to your GitHub account.
+2. Log in to [Netlify](https://app.netlify.com/) and click **"Add new site → Import an existing project"**.
+3. Connect your GitHub account and select this repository.
+4. Leave the build settings at their defaults (Netlify reads `netlify.toml` automatically):
+   - **Build command:** *(leave blank)*
+   - **Publish directory:** `.`
+5. Click **"Deploy site"**.
+
+Netlify will deploy `index.html` as the static frontend and
+`netlify/functions/chat.py` as a serverless Python function reachable at `/api/chat`.
+
+> **No environment variables are required** for the built-in rule-based engine.
+> If you swap `generate_reply()` for an LLM API, add your API key via
+> **Site settings → Environment variables**.
+
+---
+
+### Run locally (Gradio UI)
 
 ```bash
 python -m venv .venv
@@ -13,7 +39,29 @@ python app.py
 
 Then open the Gradio link printed in the terminal (default port: `7860`).
 
-### Files
+### Run the static frontend locally
 
-- `app.py`: Gradio chat UI
-- `triple_helix_engine.py`: lightweight reply engine (swap this with an LLM/API later)
+You can serve `index.html` with any static server and test the Netlify Function locally
+using the [Netlify CLI](https://docs.netlify.com/cli/get-started/):
+
+```bash
+npm install -g netlify-cli
+netlify dev
+```
+
+This starts a local dev server (default: `http://localhost:8888`) that serves the
+static site **and** runs the Python function at `/api/chat`.
+
+---
+
+### Repository layout
+
+| Path | Description |
+|------|-------------|
+| `index.html` | Static chat UI (deployed as the Netlify site root) |
+| `netlify.toml` | Netlify build & functions configuration |
+| `netlify/functions/chat.py` | Serverless Python function — handles `POST /api/chat` |
+| `netlify/functions/requirements.txt` | Dependencies for the serverless function |
+| `app.py` | Alternative Gradio chat UI (for local dev) |
+| `triple_helix_engine.py` | Lightweight reply engine (swap for LLM/API when ready) |
+| `requirements.txt` | Python dependencies for the Gradio UI |

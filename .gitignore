@@ -1,0 +1,17 @@
+# Python caches
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Netlify local dev cache
+.netlify/
+
+# Editor / OS artefacts
+.DS_Store
+*.swp
+*.swo
