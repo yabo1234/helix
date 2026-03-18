@@ -6,13 +6,7 @@
   publish = "public"
   # No build command is required — the public/ folder contains plain HTML.
 
-# Redirect root to the index page (redundant but explicit).
-[[redirects]]
-  from = "/"
-  to   = "/index.html"
-  status = 200
-
-# SPA-style fallback — keeps direct URL access working.
+# Fallback — serves index.html for all paths (works for both root and any deep link).
 [[redirects]]
   from = "/*"
   to   = "/index.html"
