@@ -21,12 +21,24 @@ Then open the Gradio link printed in the terminal (default port: `7860`).
 
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/yabo1234/helix)
 
-The `public/` folder contains a static HTML page (`index.html`) that describes the chatbot and guides reviewers. A `netlify.toml` in the repo root configures Netlify to serve this page automatically.
+The `public/` folder contains a static HTML page with an **interactive chat widget** powered by a Netlify Serverless Function (`netlify/functions/chat.py`). When deployed to Netlify:
+- Visitors can chat with the Triple-Helix engine live in the browser.
+- No Python server setup is needed — the function runs on demand.
+- `netlify.toml` configures the publish directory, functions, redirects, and security headers automatically.
+
+#### Live API endpoint
+
+```
+POST /.netlify/functions/chat
+Content-Type: application/json
+
+{"message": "Help me get funding for a drone agriculture pilot."}
+```
 
 #### Steps
 
 1. **One-click deploy**
-   Click the **Deploy to Netlify** button above. Netlify will fork this repo to your account and deploy the static showcase page automatically.
+   Click the **Deploy to Netlify** button above. Netlify will fork this repo to your account and deploy the showcase page automatically.
 
 2. **Or connect manually**
    Go to [app.netlify.com](https://app.netlify.com) → *Add new site → Import an existing project* → select `yabo1234/helix`. Netlify reads `netlify.toml`; the publish directory is `public/` and no build command is needed.
@@ -37,16 +49,15 @@ The `public/` folder contains a static HTML page (`index.html`) that describes t
 4. **Enable team commenting**
    In the Netlify dashboard go to *Site settings → Collaboration → Deploy Previews* and enable the **Netlify Drawer**. Team members can open the live URL, click the Netlify icon in the bottom-left corner, and leave inline comments directly on the page.
 
-> **Note:** The Python/Gradio chatbot itself cannot run on Netlify (it needs a Python server). To host the live chatbot publicly, deploy it to [Hugging Face Spaces](https://huggingface.co/spaces) or [Render](https://render.com), then share the resulting URL with your team.
-
 ---
 
 ### Files
 
 | File | Purpose |
 |------|---------|
-| `app.py` | Gradio chat UI |
+| `app.py` | Gradio chat UI (for local use) |
 | `triple_helix_engine.py` | Lightweight rule-based reply engine (swap for an LLM/API later) |
-| `requirements.txt` | Python dependencies (`gradio>=5.0.0`) |
-| `netlify.toml` | Netlify configuration (publish dir, redirects, security headers) |
-| `public/index.html` | Static showcase page served by Netlify for team review |
+| `requirements.txt` | Python dependencies (`gradio>=5.0.0`) for local Gradio UI |
+| `netlify.toml` | Netlify configuration (publish dir, functions, redirects, security headers) |
+| `netlify/functions/chat.py` | Netlify Serverless Function — powers the live chat widget on the deployed page |
+| `public/index.html` | Showcase page with interactive chat widget, served by Netlify |
