@@ -150,7 +150,7 @@ python3 economics.py
 A: No! The `--show-prompt` and `--export-prompt` options work without any API key or dependencies.
 
 **Q: Where is the prompt defined in the code?**  
-A: The prompt is defined as `SYSTEM_PROMPT` at the top of `economics.py` (around line 15).
+A: The prompt is defined as `SYSTEM_PROMPT` at the top of `economics.py`, in the module-level constants section.
 
 **Q: Can I modify the prompt?**  
 A: Yes! Edit the `SYSTEM_PROMPT` variable in `economics.py` to customize the behavior.
@@ -174,4 +174,4 @@ If you have questions about the prompt or need help customizing it:
 1. Review the current prompt: `python3 economics.py --show-prompt`
 2. Check the documentation: `ECONOMICS_README.md`
 3. Look at examples: `USAGE_EXAMPLES.md`
-4. Examine the code: `economics.py` (lines 15-28)
+4. Examine the code: `economics.py` (module-level `SYSTEM_PROMPT` variable)

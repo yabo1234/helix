@@ -76,14 +76,7 @@ class EconomicsChatBot:
     
     def display_prompt(self):
         """Display the system prompt in a formatted way."""
-        print("\n" + "=" * 70)
-        print("ECONOMICS CHATBOT SYSTEM PROMPT")
-        print("=" * 70)
-        print()
-        print(self.system_prompt)
-        print()
-        print("=" * 70)
-        print()
+        display_system_prompt()
 
     def setup_logging(self):
         """Create a timestamped log file for the conversation."""
