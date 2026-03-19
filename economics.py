@@ -11,40 +11,10 @@ import sys
 from datetime import datetime
 from pathlib import Path
 import json
+import argparse
 
-try:
-    from openai import OpenAI
-except ImportError:
-    print("Error: openai package not installed.")
-    print("Please install it with: pip install openai")
-    sys.exit(1)
-
-try:
-    import PyPDF2
-except ImportError:
-    print("Error: PyPDF2 package not installed.")
-    print("Please install it with: pip install PyPDF2")
-    sys.exit(1)
-
-
-class EconomicsChatBot:
-    """A chatbot specialized in economics discussions with PDF context support."""
-    
-    def __init__(self):
-        """Initialize the chatbot with OpenAI client and conversation history."""
-        self.api_key = os.getenv("OPENAI_API_KEY")
-        if not self.api_key:
-            print("Error: OPENAI_API_KEY environment variable not set.")
-            print("Please set it with: export OPENAI_API_KEY='your-api-key'")
-            sys.exit(1)
-        
-        self.client = OpenAI(api_key=self.api_key)
-        self.conversation_history = []
-        self.pdf_context = ""
-        self.log_file = None
-        
-        # System prompt for economics focus
-        self.system_prompt = """You are an expert economics assistant specializing in macroeconomics. 
+# Define the system prompt at module level so it can be accessed without dependencies
+SYSTEM_PROMPT = """You are an expert economics assistant specializing in macroeconomics. 
 Your responses must be:
 1. Consistent with established macroeconomic research and economic theory
 2. Supported by citations to specific papers, reports, or well-known economic facts
@@ -58,6 +28,62 @@ When providing information, always cite your sources. For example:
 
 If the user has provided PDF documents, incorporate relevant information from those documents 
 into your responses when applicable, and cite them appropriately."""
+
+
+class EconomicsChatBot:
+    """A chatbot specialized in economics discussions with PDF context support."""
+    
+    def __init__(self):
+        """Initialize the chatbot with OpenAI client and conversation history."""
+        # Import dependencies here so --show-prompt works without them
+        try:
+            from openai import OpenAI
+        except ImportError:
+            print("Error: openai package not installed.")
+            print("Please install it with: pip install openai")
+            sys.exit(1)
+        
+        try:
+            import PyPDF2
+            self.PyPDF2 = PyPDF2
+        except ImportError:
+            print("Error: PyPDF2 package not installed.")
+            print("Please install it with: pip install PyPDF2")
+            sys.exit(1)
+        
+        self.api_key = os.getenv("OPENAI_API_KEY")
+        if not self.api_key:
+            print("Error: OPENAI_API_KEY environment variable not set.")
+            print("Please set it with: export OPENAI_API_KEY='your-api-key'")
+            sys.exit(1)
+        
+        self.client = OpenAI(api_key=self.api_key)
+        self.conversation_history = []
+        self.pdf_context = ""
+        self.log_file = None
+        
+        # Use the module-level system prompt
+        self.system_prompt = SYSTEM_PROMPT
+
+    def get_system_prompt(self):
+        """
+        Get the system prompt used for the chatbot.
+        
+        Returns:
+            str: The system prompt text
+        """
+        return self.system_prompt
+    
+    def display_prompt(self):
+        """Display the system prompt in a formatted way."""
+        print("\n" + "=" * 70)
+        print("ECONOMICS CHATBOT SYSTEM PROMPT")
+        print("=" * 70)
+        print()
+        print(self.system_prompt)
+        print()
+        print("=" * 70)
+        print()
 
     def setup_logging(self):
         """Create a timestamped log file for the conversation."""
@@ -78,7 +104,7 @@ into your responses when applicable, and cite them appropriately."""
         """Extract text content from a PDF file."""
         try:
             with open(pdf_path, 'rb') as file:
-                pdf_reader = PyPDF2.PdfReader(file)
+                pdf_reader = self.PyPDF2.PdfReader(file)
                 text = ""
                 # Limit to first 10 pages to avoid context length issues
                 max_pages = min(len(pdf_reader.pages), 10)
@@ -230,8 +256,72 @@ into your responses when applicable, and cite them appropriately."""
             print(f"\nConversation log saved to: {log_filename}")
 
 
+def display_system_prompt():
+    """Display the system prompt without initializing the chatbot."""
+    print("\n" + "=" * 70)
+    print("ECONOMICS CHATBOT SYSTEM PROMPT")
+    print("=" * 70)
+    print()
+    print(SYSTEM_PROMPT)
+    print()
+    print("=" * 70)
+    print()
+
+
+def export_system_prompt(filename):
+    """Export the system prompt to a file."""
+    try:
+        with open(filename, 'w', encoding='utf-8') as f:
+            f.write("Economics Chatbot System Prompt\n")
+            f.write("=" * 70 + "\n\n")
+            f.write(SYSTEM_PROMPT)
+            f.write("\n\n" + "=" * 70 + "\n")
+        print(f"System prompt exported to: {filename}")
+        return True
+    except Exception as e:
+        print(f"Error exporting prompt: {str(e)}")
+        return False
+
+
 def main():
     """Main entry point for the economics chatbot."""
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(
+        description='Economics Chat Bot - An AI-powered economics discussion assistant.',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  python3 economics.py                 # Run the chatbot normally
+  python3 economics.py --show-prompt   # Display the system prompt and exit
+  python3 economics.py --export-prompt prompt.txt  # Export prompt to a file
+        """
+    )
+    parser.add_argument(
+        '--show-prompt',
+        action='store_true',
+        help='Display the system prompt used by the chatbot'
+    )
+    parser.add_argument(
+        '--export-prompt',
+        metavar='FILE',
+        help='Export the system prompt to a file'
+    )
+    
+    args = parser.parse_args()
+    
+    # Handle --show-prompt option (no dependencies needed)
+    if args.show_prompt:
+        display_system_prompt()
+        return
+    
+    # Handle --export-prompt option (no dependencies needed)
+    if args.export_prompt:
+        if export_system_prompt(args.export_prompt):
+            return
+        else:
+            sys.exit(1)
+    
+    # Run chatbot normally (requires dependencies)
     chatbot = EconomicsChatBot()
     chatbot.run()
 

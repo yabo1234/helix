@@ -24,7 +24,7 @@ export OPENAI_API_KEY='your-api-key-here'
 
 ## Usage
 
-Run the chatbot from the command line:
+### Run the chatbot:
 
 ```bash
 python3 economics.py
@@ -34,6 +34,28 @@ Or make it executable and run directly:
 ```bash
 chmod +x economics.py
 ./economics.py
+```
+
+### View the system prompt:
+
+To see the LLM prompt used by the chatbot:
+
+```bash
+python3 economics.py --show-prompt
+```
+
+### Export the system prompt:
+
+To save the prompt to a file for review or modification:
+
+```bash
+python3 economics.py --export-prompt my_prompt.txt
+```
+
+### Command-line options:
+
+```bash
+python3 economics.py --help  # Show all available options
 ```
 
 ## How It Works
@@ -51,6 +73,24 @@ The chatbot is configured with a specialized prompt that ensures:
 - Citations are provided for facts, papers, and reports
 - Responses are accurate and evidence-based
 - PDF context is incorporated when provided
+
+### Viewing the Prompt
+
+You can view the exact system prompt used by the chatbot:
+
+```bash
+# Display in terminal
+python3 economics.py --show-prompt
+
+# Export to a file
+python3 economics.py --export-prompt prompt.txt
+```
+
+This allows you to:
+- Understand how the chatbot is configured
+- Review the instructions given to the AI
+- Customize the prompt for your needs
+- Share the prompt configuration with others
 
 ## Requirements
 

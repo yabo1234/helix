@@ -155,3 +155,48 @@ You can modify `economics.py` to:
 - Modify max tokens (default: 800)
 - Customize the system prompt
 - Change PDF page limits
+
+## Viewing the System Prompt
+
+### Display the prompt in terminal:
+```bash
+python3 economics.py --show-prompt
+```
+
+This will display:
+```
+======================================================================
+ECONOMICS CHATBOT SYSTEM PROMPT
+======================================================================
+
+You are an expert economics assistant specializing in macroeconomics. 
+Your responses must be:
+1. Consistent with established macroeconomic research and economic theory
+2. Supported by citations to specific papers, reports, or well-known economic facts
+...
+======================================================================
+```
+
+### Export the prompt to a file:
+```bash
+python3 economics.py --export-prompt my_prompt.txt
+```
+
+This creates a file with the system prompt that you can:
+- Review and modify
+- Share with others
+- Use as a reference for customization
+- Compare different versions
+
+### Programmatic access:
+```python
+from economics import EconomicsChatBot, SYSTEM_PROMPT
+
+# Access the prompt directly
+print(SYSTEM_PROMPT)
+
+# Or through the chatbot instance
+chatbot = EconomicsChatBot()
+prompt = chatbot.get_system_prompt()
+print(prompt)
+```
