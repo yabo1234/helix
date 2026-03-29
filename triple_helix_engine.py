@@ -30,6 +30,9 @@ def _triage_intent(message: str) -> str:
         return "research"
     if any(k in m for k in ("partnership", "mou", "consortium", "collaboration", "stakeholder")):
         return "partnership"
+    if any(k in m for k in ("video ad", "video advertisement", "video commercial", "ad script",
+                             "advertisement script", "marketing video", "promo video", "promotional video")):
+        return "marketing"
     return "general"
 
 
@@ -61,6 +64,13 @@ def _clarifying_questions(intent: str) -> list[str]:
             "What value does each helix bring (knowledge, market access, legitimacy)?",
             "How will decisions be made (steering group, PI-led, joint venture)?",
         ],
+        "marketing": [
+            "What is the primary target audience (age range, income level, location)?",
+            "What unique selling points distinguish this business from competitors?",
+            "What is the desired tone (luxury, affordable, family-friendly, adventurous)?",
+            "What call-to-action should the ad end with (visit showroom, call now, visit website)?",
+            "What is the preferred video length (15 s, 30 s, 60 s)?",
+        ],
     }
     return (by_intent.get(intent, []) + common)[:5]
 
@@ -79,16 +89,43 @@ def generate_reply(message: str, history: list[dict[str, str]] | None = None) ->
     intent = _triage_intent(message)
     questions = _clarifying_questions(intent)
 
-    # Keep responses helpful but not overly long; the UI can iterate.
-    answer = (
-        "Here’s a Triple-Helix framing (Academia × Industry × Government):\n\n"
-        "1) Academia (knowledge): What new insight/tech is needed, and what proof (data, prototype, publication) will de-risk it?\n"
-        "2) Industry (value): Who pays/uses it, what is the adoption path, and what incentives/ROI exist?\n"
-        "3) Government (enabling): What policies, standards, procurement, or funding can accelerate adoption and reduce risk?\n\n"
-        "A practical next step is to define a joint pilot with clear roles, success metrics, and a governance model.\n\n"
-        "To tailor this, answer:\n"
-        + "\n".join(f"- {q}" for q in questions)
-    )
+    if intent == "marketing":
+        answer = (
+            "Here is a ready-to-use video-ad prompt for **JF MOTORES** in Finfinne city:\n\n"
+            "---\n"
+            "**[SCENE 1 – 0:00–0:05]**\n"
+            "Aerial drone shot of Finfinne (Addis Ababa) city skyline at golden hour.\n"
+            "Voiceover (confident, warm): *\"Finfinne – a city that never stops moving.\"*\n\n"
+            "**[SCENE 2 – 0:05–0:15]**\n"
+            "Close-up of a gleaming car rolling off the JF MOTORES showroom forecourt.\n"
+            "Cut to smiling customers shaking hands with a salesperson inside a bright, modern showroom.\n"
+            "Voiceover: *\"At JF MOTORES, we bring you quality vehicles and trusted service – right here in your city.\"*\n\n"
+            "**[SCENE 3 – 0:15–0:22]**\n"
+            "Quick montage of different car models (sedan, SUV, pickup) with price tags or finance badges.\n"
+            "Text on screen: **\"Wide selection. Competitive prices. Flexible financing.\"**\n\n"
+            "**[SCENE 4 – 0:22–0:28]**\n"
+            "Happy family loading luggage into their new car; thumbs-up from the driver.\n"
+            "Voiceover: *\"Your dream car is closer than you think.\"*\n\n"
+            "**[SCENE 5 – 0:28–0:30]**\n"
+            "JF MOTORES logo appears on a clean white background.\n"
+            "Text: **\"JF MOTORES – Finfinne's Trusted Car Dealer\"**\n"
+            "Call-to-action: *\"Visit us today | 📍 [Fill in: Showroom Address] | 📞 [Fill in: Phone Number]\"*\n"
+            "---\n\n"
+            "> ℹ️ Replace the bracketed placeholders above with JF MOTORES' actual address and phone number before use.\n\n"
+            "To further customise this script, answer:\n"
+            + "\n".join(f"- {q}" for q in questions)
+        )
+    else:
+        # Keep responses helpful but not overly long; the UI can iterate.
+        answer = (
+            "Here’s a Triple-Helix framing (Academia × Industry × Government):\n\n"
+            "1) Academia (knowledge): What new insight/tech is needed, and what proof (data, prototype, publication) will de-risk it?\n"
+            "2) Industry (value): Who pays/uses it, what is the adoption path, and what incentives/ROI exist?\n"
+            "3) Government (enabling): What policies, standards, procurement, or funding can accelerate adoption and reduce risk?\n\n"
+            "A practical next step is to define a joint pilot with clear roles, success metrics, and a governance model.\n\n"
+            "To tailor this, answer:\n"
+            + "\n".join(f"- {q}" for q in questions)
+        )
 
     meta = {
         "intent": intent,
