@@ -8,10 +8,26 @@ from triple_helix_engine import generate_reply
 
 
 APP_TITLE = "Triple-Helix Chatbot"
-APP_DESCRIPTION = (
-    "A lightweight UI that helps you think through innovation using the "
-    "Academia × Industry × Government (Triple Helix) framework."
-)
+
+
+def get_app_description() -> str:
+    """Generate app description based on configured LLM provider."""
+    provider = os.environ.get("LLM_PROVIDER", "rule-based").lower()
+    
+    base_description = (
+        "A lightweight UI that helps you think through innovation using the "
+        "Academia × Industry × Government (Triple Helix) framework."
+    )
+    
+    if provider == "deepseek":
+        return f"{base_description}\n\n**Powered by DeepSeek AI** 🤖"
+    elif provider == "openai":
+        return f"{base_description}\n\n**Powered by OpenAI** 🤖"
+    else:
+        return f"{base_description}\n\n**Using rule-based responses** (configure LLM_PROVIDER for AI-powered responses)"
+
+
+APP_DESCRIPTION = get_app_description()
 
 
 def chat_fn(message: str, history: list[dict[str, str]]):
@@ -23,21 +39,16 @@ def chat_fn(message: str, history: list[dict[str, str]]):
 
 
 def build_ui() -> gr.Blocks:
-    with gr.Blocks(title=APP_TITLE, theme=gr.themes.Soft()) as demo:
+    with gr.Blocks(title=APP_TITLE) as demo:
         gr.Markdown(f"## {APP_TITLE}\n\n{APP_DESCRIPTION}")
 
         gr.ChatInterface(
             fn=chat_fn,
-            type="messages",
-            chatbot=gr.Chatbot(height=420, show_copy_button=True),
+            chatbot=gr.Chatbot(height=420),
             textbox=gr.Textbox(
                 placeholder="Describe your innovation challenge or idea…",
                 lines=2,
             ),
-            submit_btn="Send",
-            retry_btn="Retry",
-            undo_btn="Undo",
-            clear_btn="Clear",
             examples=[
                 "Help me design a university–startup–government pilot for renewable energy forecasting.",
                 "How do I structure a consortium for an AI healthcare product while staying compliant?",
@@ -46,9 +57,11 @@ def build_ui() -> gr.Blocks:
         )
 
         gr.Markdown(
-            "### Notes\n"
-            "- This UI currently uses a built-in, rule-based response engine.\n"
-            "- Swap `generate_reply()` in `triple_helix_engine.py` for an LLM/API when ready."
+            "### Configuration\n"
+            "- Set `LLM_PROVIDER=deepseek` (or `openai`) in a `.env` file to use AI-powered responses.\n"
+            "- For DeepSeek: Set `DEEPSEEK_API_KEY` with your API key from https://platform.deepseek.com/\n"
+            "- For OpenAI: Set `OPENAI_API_KEY` with your OpenAI API key.\n"
+            "- See `.env.example` for all configuration options."
         )
 
     return demo
@@ -57,5 +70,8 @@ def build_ui() -> gr.Blocks:
 if __name__ == "__main__":
     demo = build_ui()
     port = int(os.environ.get("PORT", "7860"))
-    demo.launch(server_name="0.0.0.0", server_port=port, show_api=False)
+    demo.launch(
+        server_name="0.0.0.0",
+        server_port=port
+    )
 
