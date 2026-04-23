@@ -1,0 +1,28 @@
+# Netlify configuration for the Triple-Helix Innovation Chatbot showcase page.
+# The Python/Gradio chatbot itself is run locally (see README for instructions).
+# This file deploys the static preview page in public/ to Netlify.
+
+[build]
+  publish = "public"
+  # No build command is required — the public/ folder contains plain HTML.
+
+# Serverless Functions (Python) — power the live chat endpoint.
+[functions]
+  directory      = "netlify/functions"
+  # Bundle triple_helix_engine.py alongside the function so it can be imported.
+  included_files = ["triple_helix_engine.py"]
+
+# Fallback — serves index.html for all paths (works for both root and any deep link).
+[[redirects]]
+  from = "/*"
+  to   = "/index.html"
+  status = 200
+
+# Security headers.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options        = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy        = "strict-origin-when-cross-origin"
+    Permissions-Policy     = "geolocation=(), microphone=(), camera=()"
