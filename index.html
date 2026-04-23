@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Triple-Helix Innovation Chatbot</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1.5rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 1.25rem;
+      max-width: 720px;
+      width: 100%;
+    }
+
+    header h1 {
+      font-size: 1.75rem;
+      color: #1a202c;
+    }
+
+    header p {
+      margin-top: 0.5rem;
+      color: #4a5568;
+      font-size: 0.95rem;
+    }
+
+    .helix-badges {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 0.75rem;
+    }
+
+    .badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .badge-academia  { background: #ebf8ff; color: #2b6cb0; }
+    .badge-industry  { background: #f0fff4; color: #276749; }
+    .badge-gov       { background: #fefcbf; color: #744210; }
+
+    #chat-window {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      width: 100%;
+      max-width: 720px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    #messages {
+      flex: 1;
+      padding: 1.25rem;
+      overflow-y: auto;
+      min-height: 380px;
+      max-height: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .msg {
+      max-width: 80%;
+      padding: 0.65rem 1rem;
+      border-radius: 12px;
+      line-height: 1.55;
+      font-size: 0.92rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .msg-user {
+      align-self: flex-end;
+      background: #4299e1;
+      color: #fff;
+      border-bottom-right-radius: 3px;
+    }
+
+    .msg-bot {
+      align-self: flex-start;
+      background: #edf2f7;
+      color: #1a202c;
+      border-bottom-left-radius: 3px;
+    }
+
+    .msg-thinking {
+      align-self: flex-start;
+      background: #edf2f7;
+      color: #718096;
+      font-style: italic;
+      border-bottom-left-radius: 3px;
+    }
+
+    #examples {
+      padding: 0 1.25rem 0.75rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .example-btn {
+      background: #ebf8ff;
+      color: #2b6cb0;
+      border: 1px solid #bee3f8;
+      border-radius: 8px;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .example-btn:hover { background: #bee3f8; }
+
+    #input-row {
+      display: flex;
+      gap: 0.5rem;
+      padding: 1rem 1.25rem;
+      border-top: 1px solid #e2e8f0;
+      background: #f7fafc;
+    }
+
+    #user-input {
+      flex: 1;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      padding: 0.6rem 0.85rem;
+      font-size: 0.93rem;
+      resize: none;
+      line-height: 1.4;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    #user-input:focus { border-color: #4299e1; }
+
+    #send-btn {
+      background: #4299e1;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0 1.25rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+
+    #send-btn:hover:not(:disabled) { background: #3182ce; }
+    #send-btn:disabled { background: #a0aec0; cursor: default; }
+
+    footer {
+      margin-top: 1rem;
+      font-size: 0.78rem;
+      color: #718096;
+      text-align: center;
+    }
+
+    @media (max-width: 480px) {
+      .msg { max-width: 95%; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🧬 Triple-Helix Innovation Chatbot</h1>
+  <p>Think through innovation challenges using the Academia × Industry × Government framework.</p>
+  <div class="helix-badges">
+    <span class="badge badge-academia">🎓 Academia</span>
+    <span class="badge badge-industry">🏭 Industry</span>
+    <span class="badge badge-gov">🏛️ Government</span>
+  </div>
+</header>
+
+<div id="chat-window">
+  <div id="messages">
+    <div class="msg msg-bot">Hi! Describe your innovation challenge or idea and I'll help you frame it through the Triple-Helix lens (Academia × Industry × Government).</div>
+  </div>
+
+  <div id="examples">
+    <button class="example-btn" data-msg="Help me design a university–startup–government pilot for renewable energy forecasting.">🌱 Renewable energy pilot</button>
+    <button class="example-btn" data-msg="How do I structure a consortium for an AI healthcare product while staying compliant?">🏥 AI healthcare consortium</button>
+    <button class="example-btn" data-msg="I want funding for a smart agriculture prototype. What should the proposal include?">🌾 Smart agriculture funding</button>
+  </div>
+
+  <div id="input-row">
+    <textarea id="user-input" rows="2" placeholder="Describe your innovation challenge or idea…"></textarea>
+    <button id="send-btn">Send</button>
+  </div>
+</div>
+
+<footer>
+  Powered by the Triple-Helix model &bull; Deployed on Netlify
+</footer>
+
+<script>
+  const messagesEl = document.getElementById('messages');
+  const inputEl    = document.getElementById('user-input');
+  const sendBtn    = document.getElementById('send-btn');
+
+  // History kept client-side; passed to the API on each request.
+  const history = [];
+
+  function scrollToBottom() {
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function appendMessage(role, text) {
+    const div = document.createElement('div');
+    div.className = role === 'user' ? 'msg msg-user' : 'msg msg-bot';
+    div.textContent = text;
+    messagesEl.appendChild(div);
+    scrollToBottom();
+    return div;
+  }
+
+  function appendThinking() {
+    const div = document.createElement('div');
+    div.className = 'msg msg-thinking';
+    div.textContent = 'Thinking…';
+    messagesEl.appendChild(div);
+    scrollToBottom();
+    return div;
+  }
+
+  async function sendMessage(text) {
+    if (!text.trim()) return;
+
+    appendMessage('user', text);
+    history.push({ role: 'user', content: text });
+
+    sendBtn.disabled = true;
+    inputEl.value = '';
+
+    const thinkingDiv = appendThinking();
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text, history }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || `HTTP ${res.status}`);
+      }
+
+      const data = await res.json();
+      const answer = data.answer || '(no response)';
+
+      thinkingDiv.remove();
+      appendMessage('bot', answer);
+      history.push({ role: 'assistant', content: answer });
+    } catch (e) {
+      thinkingDiv.remove();
+      appendMessage('bot', `⚠️ Error: ${e.message}`);
+    } finally {
+      sendBtn.disabled = false;
+      inputEl.focus();
+    }
+  }
+
+  sendBtn.addEventListener('click', () => sendMessage(inputEl.value));
+
+  inputEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage(inputEl.value);
+    }
+  });
+
+  document.querySelectorAll('.example-btn').forEach((btn) => {
+    btn.addEventListener('click', () => sendMessage(btn.dataset.msg));
+  });
+</script>
+</body>
+</html>
