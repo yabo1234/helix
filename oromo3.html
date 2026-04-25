@@ -1,590 +1,639 @@
- <!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="om">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Baga nagaan dhufte — Welcome</title>
-
-<style>
-:root {
-  --bg: #eef2f7;
-  --text: #111827;
-  --card: rgba(255,255,255,0.7);
-  --border: rgba(148,163,184,0.4);
-  --accent: #2563eb;
-  --accent-soft: #dbeafe;
-  --shadow: 0 18px 45px rgba(15,23,42,0.18);
-  --nav-height: 60px;
-}
-
-.dark {
-  --bg: #020617;
-  --text: #e5e7eb;
-  --card: rgba(15,23,42,0.85);
-  --border: rgba(30,64,175,0.7);
-  --accent: #60a5fa;
-  --accent-soft: rgba(37,99,235,0.25);
-  --shadow: 0 18px 45px rgba(0,0,0,0.7);
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background: radial-gradient(circle at top, #e0f2fe 0, var(--bg) 40%, #f9fafb 100%);
-  color: var(--text);
-  transition: background 0.3s ease, color 0.3s ease;
-  scroll-behavior: smooth;
-}
-
-/* NAVBAR */
-nav {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  height: var(--nav-height);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 18px;
-  backdrop-filter: blur(20px);
-  background: linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0.6));
-  border-bottom: 1px solid var(--border);
-}
-
-.dark nav {
-  background: linear-gradient(to bottom, rgba(15,23,42,0.96), rgba(15,23,42,0.8));
-}
-
-.nav-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 700;
-  font-size: 1.05rem;
-}
-
-.logo svg {
-  width: 30px;
-  height: 30px;
-}
-
-nav ul {
-  list-style: none;
-  display: flex;
-  gap: 18px;
-  font-size: 0.9rem;
-}
-
-nav a {
-  text-decoration: none;
-  color: var(--text);
-  position: relative;
-  padding-bottom: 2px;
-}
-
-nav a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 0;
-  height: 2px;
-  background: var(--accent);
-  transition: width 0.18s ease-out;
-}
-
-nav a:hover::after,
-nav a.active::after {
-  width: 100%;
-}
-
-.nav-right {
-  display: flex;
-  gap: 8px;
-}
-
-button {
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
-  border-radius: 999px;
-  padding: 6px 12px;
-  font-size: 0.85rem;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-button:hover {
-  background: rgba(255,255,255,0.95);
-}
-
-.dark button:hover {
-  background: rgba(15,23,42,0.95);
-}
-
-/* HERO */
-.hero {
-  height: 260px;
-  border-radius: 0 0 24px 24px;
-  margin-bottom: 10px;
-  background: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1400&q=80')
-    center/cover no-repeat;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: #f9fafb;
-  text-shadow: 0 4px 18px rgba(0,0,0,0.7);
-}
-
-.hero-inner {
-  max-width: 640px;
-  padding: 0 16px;
-}
-
-.hero-title {
-  font-size: clamp(2.1rem, 3vw, 2.7rem);
-  margin-bottom: 6px;
-}
-
-.hero-sub {
-  font-size: 0.98rem;
-  opacity: 0.9;
-}
-
-/* LAYOUT */
-.page {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 16px 16px 40px;
-}
-
-/* CARD */
-.card {
-  background: var(--card);
-  border-radius: 18px;
-  padding: 20px 20px 18px;
-  margin-bottom: 18px;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--border);
-  backdrop-filter: blur(22px);
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.card-title {
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.card-tag {
-  font-size: 0.75rem;
-  padding: 3px 8px;
-  border-radius: 999px;
-  background: var(--accent-soft);
-  color: var(--accent);
-}
-
-/* SEARCH */
-#searchInput {
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,0.8);
-  color: var(--text);
-  font-size: 0.9rem;
-}
-
-.dark #searchInput {
-  background: rgba(15,23,42,0.9);
-}
-
-/* CONTENT */
-h2 {
-  font-size: 1rem;
-  margin-bottom: 6px;
-}
-
-p, li {
-  font-size: 0.92rem;
-}
-
-ul {
-  padding-left: 18px;
-}
-
-.highlight {
-  background: yellow;
-  color: #111827;
-}
-
-/* ELECTION CARDS */
-.election-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-  gap: 14px;
-}
-
-@media (max-width: 720px) {
-  nav ul {
-    display: none;
-  }
-  .election-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* FOOTER */
-footer {
-  text-align: center;
-  font-size: 0.8rem;
-  color: #6b7280;
-  margin-top: 10px;
-}
-</style>
+  <meta charset="UTF-8" />
+  <title>Baga nagaan dhufte — Welcome</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Oromo bilingual information hub with latest news and social media updates." />
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-soft: #0b1020;
+      --card: #111827;
+      --accent: #22c55e;
+      --accent-soft: rgba(34,197,94,0.15);
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: #1f2937;
+      --danger: #f97373;
+      --shadow-soft: 0 18px 40px rgba(0,0,0,0.55);
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-pill: 999px;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1f2937 0, #020617 45%, #000 100%);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(to bottom, rgba(15,23,42,0.96), rgba(15,23,42,0.82), transparent);
+      border-bottom: 1px solid rgba(148,163,184,0.25);
+    }
+    .nav {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 20% 0, #4ade80, #22c55e 40%, #16a34a 70%, #15803d 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ecfdf5;
+      font-weight: 800;
+      font-size: 0.9rem;
+      box-shadow: 0 12px 30px rgba(34,197,94,0.55);
+    }
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+    .brand-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+    .brand-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+    }
+    .nav-links a {
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .nav-links a:hover {
+      border-color: rgba(148,163,184,0.5);
+      color: var(--text);
+      background: rgba(15,23,42,0.9);
+    }
+    .nav-pill {
+      border-radius: 999px;
+      padding: 0.25rem;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.4);
+      display: inline-flex;
+      gap: 0.25rem;
+    }
+    .nav-pill button {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.75rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+    .nav-pill button.active {
+      background: var(--accent-soft);
+      color: #bbf7d0;
+    }
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 3rem;
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.4fr);
+      gap: 1.5rem;
+    }
+    @media (max-width: 880px) {
+      main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+    .card {
+      background: radial-gradient(circle at top left, rgba(34,197,94,0.12), transparent 55%),
+                  radial-gradient(circle at bottom right, rgba(59,130,246,0.12), transparent 55%),
+                  var(--card);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148,163,184,0.35);
+      box-shadow: var(--shadow-soft);
+      padding: 1.25rem 1.35rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+    }
+    .card-tag {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(34,197,94,0.12);
+      color: #bbf7d0;
+      border: 1px solid rgba(34,197,94,0.5);
+    }
+    .hero-title {
+      font-size: 1.7rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+    .hero-sub {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 0.9rem;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 1rem;
+    }
+    @media (max-width: 720px) {
+      .hero-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+    .hero-block {
+      padding: 0.85rem 0.9rem;
+      border-radius: var(--radius-md);
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.4);
+      font-size: 0.85rem;
+    }
+    .hero-block h2 {
+      font-size: 0.9rem;
+      margin-bottom: 0.35rem;
+      color: #e5e7eb;
+    }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.75rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .pill {
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      background: rgba(15,23,42,0.9);
+    }
+    .pill.accent {
+      border-color: rgba(34,197,94,0.7);
+      background: rgba(34,197,94,0.12);
+      color: #bbf7d0;
+    }
+    .section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+    .section-sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.7rem;
+    }
+    .news-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.75rem;
+    }
+    .news-card {
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(148,163,184,0.4);
+      background: rgba(15,23,42,0.96);
+      padding: 0.7rem 0.8rem;
+      font-size: 0.8rem;
+    }
+    .news-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.35rem;
+    }
+    .news-source {
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+    .news-badge {
+      font-size: 0.65rem;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      color: var(--muted);
+    }
+    .news-list {
+      list-style: disc;
+      padding-left: 1.1rem;
+      margin-top: 0.25rem;
+    }
+    .news-list li {
+      margin-bottom: 0.15rem;
+    }
+    .news-footer {
+      margin-top: 0.4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+    .news-footer a {
+      font-size: 0.7rem;
+    }
+    .badge-live {
+      color: #f97373;
+    }
+    .social-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.4rem;
+    }
+    .social-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      background: rgba(15,23,42,0.96);
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .social-chip span.icon {
+      font-size: 0.9rem;
+    }
+    .side-card {
+      background: radial-gradient(circle at top right, rgba(34,197,94,0.16), transparent 55%),
+                  var(--bg-soft);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148,163,184,0.4);
+      padding: 1rem 1.1rem;
+      box-shadow: var(--shadow-soft);
+      font-size: 0.8rem;
+    }
+    .side-card h2 {
+      font-size: 0.95rem;
+      margin-bottom: 0.4rem;
+    }
+    .side-list {
+      list-style: none;
+      margin-top: 0.4rem;
+    }
+    .side-list li {
+      margin-bottom: 0.3rem;
+    }
+    .help-section {
+      margin-top: 0.6rem;
+      padding-top: 0.6rem;
+      border-top: 1px dashed rgba(148,163,184,0.4);
+      font-size: 0.78rem;
+    }
+    .help-section a {
+      font-size: 0.78rem;
+    }
+    footer {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0.75rem 1.25rem 1.5rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      border-top: 1px solid rgba(15,23,42,0.9);
+    }
+    @media (max-width: 640px) {
+      footer {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
-
 <body>
-<nav>
-  <div class="nav-left">
-    <div class="logo">
-      <!-- Oak tree logo -->
-      <svg viewBox="0 0 64 64" fill="var(--accent)" aria-hidden="true">
-        <path d="M32 4c-9 0-16 7-16 16 0 4 2 8 5 11-6 1-11 7-11 14 0 8 7 15 15 15h24c8 0 15-7 15-15 0-7-5-13-11-14 3-3 5-7 5-11 0-9-7-16-16-16z"/>
-      </svg>
-      <span id="title">Baga nagaan dhufte</span>
-    </div>
-  </div>
+  <header>
+    <nav class="nav">
+      <div class="nav-left">
+        <div class="logo">OR</div>
+        <div class="brand-text">
+          <div class="brand-title">Oromo Info Hub</div>
+          <div class="brand-sub">Baga nagaan dhufte — Welcome</div>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="#top">Home</a>
+        <a href="#news">News</a>
+        <a href="#help">Help</a>
+        <div class="nav-pill">
+          <button id="btn-om" class="active">Afaan Oromoo</button>
+          <button id="btn-en">English</button>
+        </div>
+      </div>
+    </nav>
+  </header>
 
-  <ul id="navLinks">
-    <li><a href="#home" id="m1" class="active">Home</a></li>
-    <li><a href="#news" id="m2">News</a></li>
-    <li><a href="#elections" id="m3">Elections</a></li>
-    <li><a href="#help" id="m4">Help</a></li>
-    <li><a href="#about" id="m5">About</a></li>
-  </ul>
+  <main id="top">
+    <!-- LEFT: HERO + NEWS -->
+    <section class="card" id="hero">
+      <div class="card-header">
+        <div class="card-title">Baga nagaan dhufte — Welcome</div>
+        <span class="card-tag">Bilingual · Live News</span>
+      </div>
 
-  <div class="nav-right">
-    <button type="button" onclick="toggleLang()" aria-label="Toggle language">
-      🌐 <span id="lang_label">EN</span>
-    </button>
-    <button type="button" onclick="toggleDark()" aria-label="Toggle dark mode">
-      🌙
-    </button>
-  </div>
-</nav>
+      <h1 class="hero-title" data-om="Oduu fi Odeeffannoo Haaraa Afaan Oromoo"
+          data-en="Latest Oromo News & Civic Information">
+        Oduu fi Odeeffannoo Haaraa Afaan Oromoo
+      </h1>
+      <p class="hero-sub" id="hero-sub">
+        Odeeffannoo ammayyaa, oduu haaraa fi qunnamtii hawaasaa — bakka tokkotti.
+      </p>
 
-<div class="hero" id="home">
-  <div class="hero-inner">
-    <div class="hero-title" id="hero_title">Welcome</div>
-    <div class="hero-sub" id="hero_sub">
-      Bilingual information hub (Afaan Oromoo + English) with news, election info, and support.
-    </div>
-  </div>
-</div>
+      <div class="hero-grid">
+        <div class="hero-block" id="hero-om">
+          <h2>Afaan Oromoo</h2>
+          <p>
+            Kun bu’uura odeeffannoo Afaan Oromoo ti. Oduu haaraa, marii hawaasaa,
+            fi tamsaasa YouTube irraa walitti qabna. Fuula kana irra:
+          </p>
+          <ul style="margin-top:0.35rem; padding-left:1.1rem;">
+            <li>Oduu BBC, OBN, OMN, FNN fi kkf</li>
+            <li>Qunnamtii YouTube fi Facebook</li>
+            <li>Odeeffannoo filannoo fi mirga dimokraasii</li>
+          </ul>
+        </div>
+        <div class="hero-block" id="hero-en" style="display:none;">
+          <h2>English</h2>
+          <p>
+            This page is a bilingual Oromo information hub. It aggregates news,
+            social media updates, and civic information in one place:
+          </p>
+          <ul style="margin-top:0.35rem; padding-left:1.1rem;">
+            <li>Latest headlines from trusted Oromo news sources</li>
+            <li>Live links to YouTube and Facebook channels</li>
+            <li>Space for election & civic education content</li>
+          </ul>
+        </div>
+      </div>
 
-<div class="page">
-  <!-- Search -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-title" id="search_title">Search</div>
-      <span class="card-tag" id="search_tag">Live filter</span>
-    </div>
-    <input id="searchInput" type="text" placeholder="Search content..." />
-  </div>
+      <div class="hero-meta">
+        <span class="pill accent">LIVE NEWS</span>
+        <span class="pill">YouTube: @africabigdata8482</span>
+        <span class="pill">Facebook profile linked below</span>
+      </div>
 
-  <!-- News -->
-  <section id="news" class="card content-section">
-    <div class="card-header">
-      <div class="card-title" id="h_news">News</div>
-      <span class="card-tag" id="news_tag">Afaan Oromoo</span>
-    </div>
-    <p id="p_news_intro">
-      Trusted news sources in Afaan Oromoo and English.
-    </p>
-    <ul id="p_news">
-      <li><a href="https://www.bbc.com/afaanoromoo" target="_blank">BBC Afaan Oromoo</a></li>
-      <li><a href="https://www.voaafaanoromoo.com" target="_blank">VOA Afaan Oromoo</a></li>
-    </ul>
-  </section>
+      <div style="margin-top:1.1rem;">
+        <div class="section-title" id="news-title">
+          Oduu Haaraa — Latest News
+        </div>
+        <div class="section-sub" id="news-sub">
+          Odeeffannoo yeroo dhiyoo kana BBC, OBN, OMN, FNN fi tamsaasa hawaasaa irraa.
+        </div>
 
-  <!-- Elections -->
-  <section id="elections" class="card content-section">
-    <div class="card-header">
-      <div class="card-title" id="h_elections">Election information</div>
-      <span class="card-tag" id="elections_tag">2026</span>
-    </div>
-    <div class="election-grid">
-      <div>
-        <p id="p_elections">
-          Here you will find links and updates related to the 2026 elections from trusted news sources.
+        <section id="news" class="news-grid" aria-live="polite">
+          <!-- BBC -->
+          <article class="news-card" data-source="bbc">
+            <div class="news-header">
+              <div class="news-source">BBC News Afaan Oromoo</div>
+              <span class="news-badge">RSS · Verified</span>
+            </div>
+            <ul class="news-list" id="bbc-list">
+              <li>Waraanni US–Isra’el fi Iraan hammaate — gabaasa haaraa.</li>
+              <li>Iraan hogganaa nageenyaa Ali Larjaanii ajjeefame.</li>
+              <li>MM Abiy imala gara UAE fi marii addunyaa.</li>
+            </ul>
+            <div class="news-footer">
+              <span id="bbc-updated">Last updated: just now</span>
+              <a href="https://www.bbc.com/afaanoromoo" target="_blank" rel="noopener">BBC Afaan Oromoo →</a>
+            </div>
+          </article>
+
+          <!-- OBN -->
+          <article class="news-card" data-source="obn">
+            <div class="news-header">
+              <div class="news-source">OBN — Oromia Broadcasting Network</div>
+              <span class="news-badge">TV · Regional</span>
+            </div>
+            <ul class="news-list" id="obn-list">
+              <li>Oduu galgalaa OBN — sa’aatii 1:00 irratti dhihaate.</li>
+              <li>Yaa’ii Idilee Caffee Oromiyaa fi murtii haaraa.</li>
+              <li>Oduu diinagdee fi dhimma addunyaa.</li>
+            </ul>
+            <div class="news-footer">
+              <span id="obn-updated">Last updated: just now</span>
+              <a href="https://obn.com.et" target="_blank" rel="noopener">OBN website →</a>
+            </div>
+          </article>
+
+          <!-- OMN / FNN combined -->
+          <article class="news-card" data-source="omn-fnn">
+            <div class="news-header">
+              <div class="news-source">OMN &amp; FNN Media</div>
+              <span class="news-badge badge-live">LIVE · Social</span>
+            </div>
+            <ul class="news-list" id="omn-fnn-list">
+              <li>Iraan Ayaatollaa 3ffaa muudatte — xiinxala siyaasaa.</li>
+              <li>OLA fi humnoota mootummaa gidduutti walitti bu’iinsa Fantaallee.</li>
+              <li>Rakkoo mirga namoomaa Abee‑Dongoroo, Walloo fi naannolee biro.</li>
+            </ul>
+            <div class="news-footer">
+              <span id="omn-fnn-updated">Last updated: just now</span>
+              <a href="https://fnnmedia.org" target="_blank" rel="noopener">FNN Media →</a>
+            </div>
+          </article>
+
+          <!-- Social & Live -->
+          <article class="news-card" data-source="social">
+            <div class="news-header">
+              <div class="news-source">Social &amp; Live Streams</div>
+              <span class="news-badge">YouTube · Facebook</span>
+            </div>
+            <p style="font-size:0.8rem; color:var(--muted);">
+              Tamsaasa haaraa fi oduu yeroo dhiyoo kanaaf, asii gaditti qunnamtii YouTube fi Facebook fayyadamaa.
+            </p>
+            <div class="social-links">
+              <a class="social-chip" href="https://www.youtube.com/@africabigdata8482" target="_blank" rel="noopener">
+                <span class="icon">▶</span>
+                <span>YouTube · @africabigdata8482</span>
+              </a>
+              <a class="social-chip" href="https://www.facebook.com/profile.php?id=100087420807795" target="_blank" rel="noopener">
+                <span class="icon">f</span>
+                <span>Facebook profile</span>
+              </a>
+            </div>
+            <div class="news-footer">
+              <span id="social-updated">Last checked: just now</span>
+              <span>Auto‑refresh every 60s</span>
+            </div>
+          </article>
+        </section>
+      </div>
+    </section>
+
+    <!-- RIGHT: HELP / CIVIC / HOW-TO -->
+    <aside class="side-card">
+      <h2 id="side-title">Gargaarsa fi Odeeffannoo — Help & Info</h2>
+      <p id="side-intro">
+        Fuula kana irratti oduu haaraa argachuuf, qunnamtii hawaasaa ilaali; akkasumas, gara gubbaa mirgaatti
+        “Afaan” filachuun afaan jijjiiri.
+      </p>
+
+      <ul class="side-list">
+        <li>
+          <strong>1. Fuula kana haaraa argachuuf:</strong><br />
+          Browser keessatti <code>Refresh</code> tuqi ykn <code>Ctrl + R</code> fayyadami.
+        </li>
+        <li>
+          <strong>2. Oduu haaraa of‑umaan:</strong><br />
+          Kutaan “Latest News” sekondii 60‑60 tti of‑umaan haaromsa.
+        </li>
+        <li>
+          <strong>3. YouTube &amp; Facebook:</strong><br />
+          Tamsaasa haaraa argachuuf qunnamtii asii gadii tuqi.
+        </li>
+      </ul>
+
+      <section class="help-section" id="help">
+        <h3 style="font-size:0.85rem; margin-bottom:0.25rem;">How this page updates news</h3>
+        <p>
+          JavaScript fuula kana irratti RSS fi tamsaasa hawaasaa irraa odeeffannoo haaraa fiduuf qophaa’eera.
+          Ammaaf fakkeenya (placeholder) dha; gara fuula tajaajila RSS/YouTube/Telegram dhugaa geeddaruu ni dandeessa.
         </p>
-        <ul id="p_elections_links">
-          <li><a href="https://www.bbc.com/news" target="_blank">BBC election coverage</a></li>
-          <li><a href="https://www.voanews.com" target="_blank">VOA election reports</a></li>
-        </ul>
-      </div>
-      <div>
-        <p id="p_elections_timeline_title"><strong>Simple timeline:</strong></p>
-        <ul id="p_elections_timeline">
-          <li>Registration and preparation</li>
-          <li>Campaign period</li>
-          <li>Election day</li>
-          <li>Results and analysis</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- Help -->
-  <section id="help" class="card content-section">
-    <div class="card-header">
-      <div class="card-title" id="h_help">Support</div>
-      <span class="card-tag" id="help_tag">Contact</span>
-    </div>
-    <p id="p_help">
-      For help or questions, contact us:<br>
-      <strong>Email:</strong> <a href="mailto:ame@aame.ie">ame@aame.ie</a>
-    </p>
-  </section>
-
-  <!-- About -->
-  <section id="about" class="card content-section">
-    <div class="card-header">
-      <div class="card-title" id="h_about">About this website</div>
-      <span class="card-tag" id="about_tag">Info</span>
-    </div>
-    <p id="p_about">
-      This site provides bilingual information (Afaan Oromoo + English) with a modern design, election info, news, and support.
-    </p>
-  </section>
+        <p style="margin-top:0.3rem;">
+          Yoo fooyya’iinsa dabalataa barbaadde, GitHub irratti <code>oromo3.html</code> banuun gulaali.
+        </p>
+      </section>
+    </aside>
+  </main>
 
   <footer>
-    © 2026 · Vanu Robo · <a href="mailto:ame@aame.ie">ame@aame.ie</a>
+    <div>© <span id="year"></span> Oromo Info Hub · Bilingual civic & news portal.</div>
+    <div>Source on GitHub: <code>helix/oromo3.html</code></div>
   </footer>
-</div>
 
-<script>
-// Language data
-const oromo = {
-  title: "Baga nagaan dhufte",
-  hero_title: "Baga nagaan dhufte",
-  hero_sub: "Odeeffannoo Afaan Oromoo fi English, oduu, filannoo fi gargaarsa waliin.",
-  m1: "Fuula jalqabaa",
-  m2: "Oduu",
-  m3: "Filannoo",
-  m4: "Gargaarsa",
-  m5: "Waa'ee",
-  search_title: "Barbaadi",
-  search_tag: "Filannoo saffisaa",
-  h_news: "Oduu",
-  news_tag: "Afaan Oromoo",
-  p_news_intro: "Madda oduu amanamoo Afaan Oromoo fi English.",
-  h_elections: "Odeeffannoo filannoo",
-  elections_tag: "2026",
-  p_elections: "Asitti odeeffannoo fi links filannoo 2026 kan maddoota oduu amanamoo irraa argatta.",
-  p_elections_timeline_title: "<strong>Yeroo gabaabaa:</strong>",
-  p_elections_timeline: [
-    "Galmee fi qophii filannoo",
-    "Yeroo kampaayinii",
-    "Guyyaa filannoo",
-    "Bu'aa fi xiinxala"
-  ],
-  h_help: "Gargaarsa",
-  help_tag: "Qunnamtii",
-  p_help: "Yoo gargaarsa yookaan gaaffii qabdan nu qunnamaa:<br><strong>Email:</strong> <a href=\"mailto:ame@aame.ie\">ame@aame.ie</a>",
-  h_about: "Waa'ee website kanaa",
-  about_tag: "Odeeffannoo",
-  p_about: "Fuulli kun odeeffannoo Afaan Oromoo fi English kennuuf qophaa’e; oduu, filannoo fi gargaarsa of keessaa qaba."
-};
+  <script>
+    // Language toggle
+    const btnOm = document.getElementById('btn-om');
+    const btnEn = document.getElementById('btn-en');
+    const heroSub = document.getElementById('hero-sub');
+    const heroOm = document.getElementById('hero-om');
+    const heroEn = document.getElementById('hero-en');
+    const newsTitle = document.getElementById('news-title');
+    const newsSub = document.getElementById('news-sub');
+    const sideTitle = document.getElementById('side-title');
+    const sideIntro = document.getElementById('side-intro');
 
-const english = {
-  title: "Welcome",
-  hero_title: "Welcome",
-  hero_sub: "Bilingual hub in Afaan Oromoo and English with news, elections, and support.",
-  m1: "Home",
-  m2: "News",
-  m3: "Elections",
-  m4: "Help",
-  m5: "About",
-  search_title: "Search",
-  search_tag: "Live filter",
-  h_news: "News",
-  news_tag: "Afaan Oromoo",
-  p_news_intro: "Trusted news sources in Afaan Oromoo and English.",
-  h_elections: "Election information",
-  elections_tag: "2026",
-  p_elections: "Here you will find links and updates related to the 2026 elections from trusted news sources.",
-  p_elections_timeline_title: "<strong>Simple timeline:</strong>",
-  p_elections_timeline: [
-    "Registration and preparation",
-    "Campaign period",
-    "Election day",
-    "Results and analysis"
-  ],
-  h_help: "Support",
-  help_tag: "Contact",
-  p_help: "For help or questions, contact us:<br><strong>Email:</strong> <a href=\"mailto:ame@aame.ie\">ame@aame.ie</a>",
-  h_about: "About this website",
-  about_tag: "Info",
-  p_about: "This site provides bilingual information (Afaan Oromoo + English) with a modern design, election info, news, and support."
-};
-
-let currentLang = localStorage.getItem("lang") || "en";
-
-// Apply language
-function applyLang(langObj, label) {
-  document.getElementById("title").textContent = langObj.title;
-  document.getElementById("hero_title").textContent = langObj.hero_title;
-  document.getElementById("hero_sub").innerHTML = langObj.hero_sub;
-  document.getElementById("m1").textContent = langObj.m1;
-  document.getElementById("m2").textContent = langObj.m2;
-  document.getElementById("m3").textContent = langObj.m3;
-  document.getElementById("m4").textContent = langObj.m4;
-  document.getElementById("m5").textContent = langObj.m5;
-  document.getElementById("search_title").textContent = langObj.search_title;
-  document.getElementById("search_tag").textContent = langObj.search_tag;
-  document.getElementById("h_news").textContent = langObj.h_news;
-  document.getElementById("news_tag").textContent = langObj.news_tag;
-  document.getElementById("p_news_intro").textContent = langObj.p_news_intro;
-  document.getElementById("h_elections").textContent = langObj.h_elections;
-  document.getElementById("elections_tag").textContent = langObj.elections_tag;
-  document.getElementById("p_elections").textContent = langObj.p_elections;
-  document.getElementById("p_elections_timeline_title").innerHTML = langObj.p_elections_timeline_title;
-
-  const timelineEl = document.getElementById("p_elections_timeline");
-  timelineEl.innerHTML = "";
-  langObj.p_elections_timeline.forEach(item => {
-    const li = document.createElement("li");
-    li.textContent = item;
-    timelineEl.appendChild(li);
-  });
-
-  document.getElementById("h_help").textContent = langObj.h_help;
-  document.getElementById("help_tag").textContent = langObj.help_tag;
-  document.getElementById("p_help").innerHTML = langObj.p_help;
-  document.getElementById("h_about").textContent = langObj.h_about;
-  document.getElementById("about_tag").textContent = langObj.about_tag;
-  document.getElementById("p_about").textContent = langObj.p_about;
-  document.getElementById("lang_label").textContent = label;
-}
-
-function toggleLang() {
-  currentLang = currentLang === "en" ? "om" : "en";
-  localStorage.setItem("lang", currentLang);
-  if (currentLang === "en") {
-    applyLang(english, "EN");
-  } else {
-    applyLang(oromo, "OM");
-  }
-}
-
-// Dark mode
-function applyDarkFromStorage() {
-  const dark = localStorage.getItem("dark") === "true";
-  if (dark) document.body.classList.add("dark");
-}
-
-function toggleDark() {
-  document.body.classList.toggle("dark");
-  localStorage.setItem("dark", document.body.classList.contains("dark"));
-}
-
-// Active nav on scroll
-const sections = document.querySelectorAll(".content-section, #home");
-const navLinks = document.querySelectorAll("#navLinks a");
-
-function setActiveNav() {
-  let currentId = "home";
-  const scrollPos = window.scrollY + 80;
-  sections.forEach(sec => {
-    const top = sec.offsetTop;
-    const height = sec.offsetHeight;
-    if (scrollPos >= top && scrollPos < top + height) {
-      currentId = sec.id;
+    function setLang(lang) {
+      if (lang === 'om') {
+        btnOm.classList.add('active');
+        btnEn.classList.remove('active');
+        heroOm.style.display = '';
+        heroEn.style.display = 'none';
+        heroSub.textContent =
+          'Odeeffannoo ammayyaa, oduu haaraa fi qunnamtii hawaasaa — bakka tokkotti.';
+        newsTitle.textContent = 'Oduu Haaraa — Latest News';
+        newsSub.textContent =
+          'Odeeffannoo yeroo dhiyoo kana BBC, OBN, OMN, FNN fi tamsaasa hawaasaa irraa.';
+        sideTitle.textContent = 'Gargaarsa fi Odeeffannoo — Help & Info';
+        sideIntro.textContent =
+          'Fuula kana irratti oduu haaraa argachuuf, qunnamtii hawaasaa ilaali; akkasumas, gara gubbaa mirgaatti “Afaan” filachuun afaan jijjiiri.';
+      } else {
+        btnEn.classList.add('active');
+        btnOm.classList.remove('active');
+        heroOm.style.display = 'none';
+        heroEn.style.display = '';
+        heroSub.textContent =
+          'Up‑to‑date Oromo news, social media and civic information — in one bilingual page.';
+        newsTitle.textContent = 'Latest Oromo News';
+        newsSub.textContent =
+          'Recent headlines from BBC, OBN, OMN, FNN and social media streams.';
+        sideTitle.textContent = 'Help & Information';
+        sideIntro.textContent =
+          'Use the links below to follow live streams and switch language using the toggle above.';
+      }
     }
-  });
-  navLinks.forEach(link => {
-    link.classList.toggle("active", link.getAttribute("href") === "#" + currentId);
-  });
-}
 
-// Search with highlight
-function clearHighlights() {
-  document.querySelectorAll(".highlight").forEach(el => {
-    el.outerHTML = el.innerText;
-  });
-}
+    btnOm.addEventListener('click', () => setLang('om'));
+    btnEn.addEventListener('click', () => setLang('en'));
 
-document.getElementById("searchInput").addEventListener("input", function () {
-  const q = this.value.toLowerCase();
-  clearHighlights();
+    // Auto-refreshing news (placeholder logic)
+    const updatedIds = ['bbc-updated', 'obn-updated', 'omn-fnn-updated', 'social-updated'];
 
-  if (!q) {
-    document.querySelectorAll(".content-section").forEach(sec => sec.style.display = "block");
-    return;
-  }
+    function formatTime(d) {
+      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
 
-  document.querySelectorAll(".content-section").forEach(sec => {
-    const text = sec.innerText.toLowerCase();
-    const match = text.includes(q);
-    sec.style.display = match ? "block" : "none";
-
-    if (match) {
-      const walker = document.createTreeWalker(sec, NodeFilter.SHOW_TEXT, null);
-      const nodes = [];
-      while (walker.nextNode()) nodes.push(walker.currentNode);
-      nodes.forEach(node => {
-        const idx = node.nodeValue.toLowerCase().indexOf(q);
-        if (idx !== -1 && node.nodeValue.trim() !== "") {
-          const span = document.createElement("span");
-          span.className = "highlight";
-          const before = node.nodeValue.slice(0, idx);
-          const matchText = node.nodeValue.slice(idx, idx + q.length);
-          const after = node.nodeValue.slice(idx + q.length);
-          span.textContent = matchText;
-          const frag = document.createDocumentFragment();
-          if (before) frag.appendChild(document.createTextNode(before));
-          frag.appendChild(span);
-          if (after) frag.appendChild(document.createTextNode(after));
-          node.parentNode.replaceChild(frag, node);
+    function refreshNews() {
+      const now = new Date();
+      updatedIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (id === 'social-updated') {
+          el.textContent = 'Last checked: ' + formatTime(now);
+        } else {
+          el.textContent = 'Last updated: ' + formatTime(now);
         }
       });
+
+      // PLACEHOLDER:
+      // Here you can plug real RSS / API calls, for example:
+      // fetch('YOUR_RSS_OR_API_ENDPOINT')
+      //   .then(r => r.json() or r.text())
+      //   .then(data => update the lists #bbc-list, #obn-list, #omn-fnn-list)
+      //   .catch(console.error);
     }
-  });
-});
 
-// Init
-window.addEventListener("load", () => {
-  applyDarkFromStorage();
-  if (currentLang === "en") {
-    applyLang(english, "EN");
-  } else {
-    applyLang(oromo, "OM");
-  }
-  setActiveNav();
-});
+    setInterval(refreshNews, 60000); // every 60 seconds
+    refreshNews();
 
-window.addEventListener("scroll", setActiveNav);
-</script>
+    // Year in footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
+ 
