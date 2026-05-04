@@ -398,6 +398,64 @@
     .animate-up.visible {
       animation: slideUpStrong 0.75s cubic-bezier(0.23, 1, 0.32, 1) forwards;
     }
+
+    /* Cookie banner */
+    .cookie-banner {
+      position: fixed;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      z-index: 999;
+      display: none;
+    }
+    .cookie-banner.visible {
+      display: block;
+    }
+    .cookie-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.96);
+      border: 1px solid var(--border);
+      box-shadow: 0 22px 50px rgba(15,23,42,0.22);
+      border-radius: 18px;
+      padding: 0.9rem 1rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.9rem;
+      backdrop-filter: blur(10px);
+    }
+    .cookie-text {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .cookie-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      justify-content: flex-end;
+      flex: 0 0 auto;
+    }
+    .btn {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      background: #ffffff;
+      color: var(--text);
+      padding: 0.35rem 0.8rem;
+      font-size: 0.78rem;
+      cursor: pointer;
+      box-shadow: 0 10px 22px rgba(15,23,42,0.10);
+    }
+    .btn.primary {
+      background: var(--accent);
+      border-color: rgba(37,99,235,0.8);
+      color: #eff6ff;
+    }
+    .btn:hover {
+      filter: brightness(0.98);
+    }
   </style>
 </head>
 <body>
@@ -735,6 +793,10 @@
           <li><strong>GDPR rights:</strong> Yoo deetaan kee karaa qunnamtii nu bira ga’e, haqaa/sirreeffama/haquu gaafachuu dandeessa.</li>
         </ul>
         <p class="section-sub" style="margin-top:0.65rem;">
+          <strong>Qunnamtii (Privacy):</strong> Gaaffii iccitii/GDPR yoo qabaatte email kanaan nu qunnamaa —
+          <a href="mailto:ame@aame.ie">ame@aame.ie</a>
+        </p>
+        <p class="section-sub" style="margin-top:0.35rem;">
           <strong>Update:</strong> Ibsi kun yeroo yerootti ni haaromsa.
         </p>
       </div>
@@ -753,6 +815,10 @@
           <li><strong>GDPR rights:</strong> If any personal data is received through contact, you can request access, correction, or deletion.</li>
         </ul>
         <p class="section-sub" style="margin-top:0.65rem;">
+          <strong>Privacy contact (GDPR):</strong> For privacy/GDPR requests email —
+          <a href="mailto:ame@aame.ie">ame@aame.ie</a>
+        </p>
+        <p class="section-sub" style="margin-top:0.35rem;">
           <strong>Updates:</strong> This statement may be updated from time to time.
         </p>
       </div>
@@ -763,6 +829,26 @@
     <div>© <span id="year"></span> Oromo Info Hub · Bold Slide‑Up Edition</div>
     <div><code>yabo1234/helix/oromo3.html</code></div>
   </footer>
+
+  <!-- Cookie consent banner (bilingual) -->
+  <div class="cookie-banner" id="cookie-banner" role="dialog" aria-live="polite" aria-label="Cookie consent">
+    <div class="cookie-inner">
+      <div class="cookie-text">
+        <div id="cookie-text-om">
+          <strong>Cookie Consent:</strong> Fuulli kun cookies ofii hin kaa’u; garuu linkoota alaa (YouTube/Facebook/BBC) banuun cookies isaanii kaa’uu danda’a.
+          <a href="#privacy">Privacy</a> ilaali.
+        </div>
+        <div id="cookie-text-en" style="display:none;">
+          <strong>Cookie Consent:</strong> This site does not set its own cookies, but opening third‑party links (YouTube/Facebook/BBC) may set their cookies.
+          See <a href="#privacy">Privacy</a>.
+        </div>
+      </div>
+      <div class="cookie-actions">
+        <button class="btn" id="cookie-reject">Reject</button>
+        <button class="btn primary" id="cookie-accept">Accept</button>
+      </div>
+    </div>
+  </div>
 
   <script>
     // Language toggle
@@ -782,6 +868,13 @@
     const privacyOm = document.getElementById('privacy-om');
     const privacyEn = document.getElementById('privacy-en');
 
+    // Cookie banner toggle targets
+    const cookieBanner = document.getElementById('cookie-banner');
+    const cookieTextOm = document.getElementById('cookie-text-om');
+    const cookieTextEn = document.getElementById('cookie-text-en');
+    const cookieAccept = document.getElementById('cookie-accept');
+    const cookieReject = document.getElementById('cookie-reject');
+
     function setLang(lang) {
       if (lang === 'om') {
         btnOm.classList.add('active');
@@ -799,6 +892,9 @@
 
         privacyOm.style.display = '';
         privacyEn.style.display = 'none';
+
+        cookieTextOm.style.display = '';
+        cookieTextEn.style.display = 'none';
       } else {
         btnEn.classList.add('active');
         btnOm.classList.remove('active');
@@ -815,11 +911,49 @@
 
         privacyOm.style.display = 'none';
         privacyEn.style.display = '';
+
+        cookieTextOm.style.display = 'none';
+        cookieTextEn.style.display = '';
       }
     }
 
     btnOm.addEventListener('click', () => setLang('om'));
     btnEn.addEventListener('click', () => setLang('en'));
+
+    // Cookie consent storage
+    const CONSENT_KEY = 'cookie_consent_v1';
+
+    function setConsent(value) {
+      try {
+        localStorage.setItem(CONSENT_KEY, value);
+      } catch {
+        // If storage is blocked, just hide banner for this session.
+      }
+    }
+
+    function getConsent() {
+      try {
+        return localStorage.getItem(CONSENT_KEY);
+      } catch {
+        return null;
+      }
+    }
+
+    function showCookieBannerIfNeeded() {
+      const consent = getConsent();
+      if (consent === 'accepted' || consent === 'rejected') return;
+      cookieBanner.classList.add('visible');
+    }
+
+    cookieAccept.addEventListener('click', () => {
+      setConsent('accepted');
+      cookieBanner.classList.remove('visible');
+    });
+
+    cookieReject.addEventListener('click', () => {
+      setConsent('rejected');
+      cookieBanner.classList.remove('visible');
+    });
 
     // Auto-refresh timestamps (placeholder for real feeds)
     const updatedIds = ['bbc-updated', 'obn-updated', 'election-updated', 'omn-fnn-updated', 'social-updated'];
@@ -857,7 +991,10 @@
       });
     }
 
-    window.addEventListener('load', revealAnimated);
+    window.addEventListener('load', () => {
+      revealAnimated();
+      showCookieBannerIfNeeded();
+    });
 
     // Footer year
     document.getElementById('year').textContent = new Date().getFullYear();
