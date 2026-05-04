@@ -410,9 +410,11 @@
           <div class="brand-sub">Baga nagaan dhufte — Welcome</div>
         </div>
       </div>
+
       <div class="nav-links animate-up">
         <a href="#top">Home</a>
         <a href="#news">News</a>
+        <a href="#about">About</a>
         <a href="#help">Help</a>
         <div class="nav-pill">
           <button id="btn-om" class="active">Afaan Oromoo</button>
@@ -583,6 +585,113 @@
         </p>
       </section>
     </aside>
+
+    <!-- ABOUT US (FULL-WIDTH) -->
+    <section class="card animate-up" id="about" style="grid-column: 1 / -1;">
+      <div class="card-header">
+        <div class="card-title">Waa’ee Keenya (About Us)</div>
+        <span class="card-tag">Aricabidgata · AI & Big Data</span>
+      </div>
+
+      <!-- Afaan Oromo -->
+      <div id="about-om">
+        <h2 class="hero-title" style="font-size:1.35rem; margin-bottom:0.35rem;">Aricabidgata</h2>
+        <p class="hero-sub" style="margin-bottom:0.8rem;">
+          Aricabidgata tajaajila <strong>Insights-as-a-Service</strong> dhiheessa—<strong>AI</strong> fi <strong>Big Data</strong>
+          fayyadamuun waan amma ta’aa jiru, maaliif akka ta’e, akkasumas tarkaanfii itti aanuu maal akka ta’e siif ibsa.
+          Hojiin keenya haala gabaa fi dinagdee Afrikaa irratti hundaa’a; daldala, dhaabbilee mootummaa/NGO, fi
+          waliin hojjettoota <strong>EU</strong> waliin hojii Afrikaa irratti hojjetan deeggera.
+        </p>
+
+        <div class="hero-grid" style="margin-bottom:0.85rem;">
+          <div class="hero-block">
+            <h2>Xiinxala amanamaa</h2>
+            <p>Hubannoo siif ibsamu, itti amanamtee murtee irratti hojiirra oolchuu dandeessu.</p>
+          </div>
+          <div class="hero-block">
+            <h2>Haala biyya keessaa hubatu</h2>
+            <p>Moodeelota AI fi gabaasa dinagdee Afrikaa waliin walsiman.</p>
+          </div>
+          <div class="hero-block">
+            <h2>Bu’aa murteessuu qopheessu</h2>
+            <p>Dashboard, gabaasa gabaabaa, fi yaada hojiin deeggaramu.</p>
+          </div>
+          <div class="hero-block">
+            <h2>Gatii & tajaajila</h2>
+            <p>Paakeejiiwwan hojii irratti hundaa’an (custom) ni qophaa’u.</p>
+          </div>
+        </div>
+
+        <div class="section-title" style="margin-top:0;">Qunnamtii</div>
+        <div class="social-links">
+          <a class="social-chip" href="tel:+353877135579">
+            <span class="icon">☎</span>
+            <span>WhatsApp/Phone · +353 87 713 5579</span>
+          </a>
+          <a class="social-chip" href="https://www.facebook.com/profile.php?id=100087420807795" target="_blank" rel="noopener">
+            <span class="icon">f</span>
+            <span>Facebook</span>
+          </a>
+          <a class="social-chip" href="https://www.youtube.com/@africabigdata8482" target="_blank" rel="noopener">
+            <span class="icon">▶</span>
+            <span>YouTube · @africabigdata8482</span>
+          </a>
+        </div>
+
+        <p class="section-sub" style="margin-top:0.65rem;">
+          <strong>Affeerraa:</strong> Deetaa keessan gara tarsiimoo guddinaa fi bu’aa hawaasummaa jijjiiruuf nu qunnamaa.
+        </p>
+      </div>
+
+      <!-- English -->
+      <div id="about-en" style="display:none;">
+        <h2 class="hero-title" style="font-size:1.35rem; margin-bottom:0.35rem;">Aricabidgata</h2>
+        <p class="hero-sub" style="margin-bottom:0.8rem;">
+          Aricabidgata provides <strong>Insights-as-a-Service</strong>—using <strong>AI</strong> and <strong>Big Data</strong> to explain
+          what’s happening, why it’s happening, and what to do next. Our work is grounded in real African market dynamics and supports
+          businesses, institutions, NGOs, and <strong>EU</strong> partners engaging with African economies.
+        </p>
+
+        <div class="hero-grid" style="margin-bottom:0.85rem;">
+          <div class="hero-block">
+            <h2>Explainability-first analytics</h2>
+            <p>Insights you can trust and act on.</p>
+          </div>
+          <div class="hero-block">
+            <h2>Local-context intelligence</h2>
+            <p>Models and narratives aligned with African economic realities.</p>
+          </div>
+          <div class="hero-block">
+            <h2>Decision-ready outputs</h2>
+            <p>Dashboards, briefs, and recommendations built for real-world use.</p>
+          </div>
+          <div class="hero-block">
+            <h2>Pricing & delivery</h2>
+            <p>Custom packages available based on scope.</p>
+          </div>
+        </div>
+
+        <div class="section-title" style="margin-top:0;">Contact</div>
+        <div class="social-links">
+          <a class="social-chip" href="tel:+353877135579">
+            <span class="icon">☎</span>
+            <span>WhatsApp/Phone · +353 87 713 5579</span>
+          </a>
+          <a class="social-chip" href="https://www.facebook.com/profile.php?id=100087420807795" target="_blank" rel="noopener">
+            <span class="icon">f</span>
+            <span>Facebook</span>
+          </a>
+          <a class="social-chip" href="https://www.youtube.com/@africabigdata8482" target="_blank" rel="noopener">
+            <span class="icon">▶</span>
+            <span>YouTube · @africabigdata8482</span>
+          </a>
+        </div>
+
+        <p class="section-sub" style="margin-top:0.65rem;">
+          <strong>Call to action:</strong> Let’s turn your data into a growth and impact strategy.
+        </p>
+      </div>
+    </section>
   </main>
 
   <footer>
@@ -600,6 +709,10 @@
     const heroEn = document.getElementById('hero-en');
     const sideIntro = document.getElementById('side-intro');
 
+    // About toggle targets
+    const aboutOm = document.getElementById('about-om');
+    const aboutEn = document.getElementById('about-en');
+
     function setLang(lang) {
       if (lang === 'om') {
         btnOm.classList.add('active');
@@ -611,6 +724,9 @@
           'Oduu haaraa, odeeffannoo hawaasaa, fi tamsaasa YouTube/Facebook bakka tokkotti.';
         sideIntro.textContent =
           'Fuula kana haaraa argachuuf Refresh godhi. Oduu haaraa 60 sec keessatti of‑umaan haaromsa.';
+
+        aboutOm.style.display = '';
+        aboutEn.style.display = 'none';
       } else {
         btnEn.classList.add('active');
         btnOm.classList.remove('active');
@@ -621,6 +737,9 @@
           'Latest Oromo news, social updates, and YouTube/Facebook streams in one place.';
         sideIntro.textContent =
           'Press Refresh to see the latest version. News timestamps auto‑update every 60 seconds.';
+
+        aboutOm.style.display = 'none';
+        aboutEn.style.display = '';
       }
     }
 
