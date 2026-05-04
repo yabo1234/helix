@@ -298,7 +298,7 @@
     }
 
     .news-footer {
-      margin-top: 0.4rem;
+      margin-top:  0.4rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -415,6 +415,7 @@
         <a href="#top">Home</a>
         <a href="#news">News</a>
         <a href="#about">About</a>
+        <a href="#privacy">Privacy</a>
         <a href="#help">Help</a>
         <div class="nav-pill">
           <button id="btn-om" class="active">Afaan Oromoo</button>
@@ -486,9 +487,9 @@
               <span class="news-badge">RSS · Verified</span>
             </div>
             <ul class="news-list" id="bbc-list">
-              <li>Waraanni US–Isra’el fi Iraan hammaate — gabaasa haaraa.</li>
-              <li>Iraan hogganaa nageenyaa ajjeefame.</li>
-              <li>MM Abiy imala gara biyyoota Arabaa.</li>
+              <li><a href="https://www.bbc.com/afaanoromoo" target="_blank" rel="noopener">BBC Afaan Oromoo — latest headlines</a></li>
+              <li><a href="https://www.bbc.com/afaanoromoo/topics/cz74k3v2zdqt" target="_blank" rel="noopener">Filannoo / Elections (BBC Afaan Oromoo topic)</a></li>
+              <li><a href="https://www.bbc.com/afaanoromoo/topics/cyx5krnw38vt" target="_blank" rel="noopener">Siyaasaa / Politics (BBC Afaan Oromoo topic)</a></li>
             </ul>
             <div class="news-footer">
               <span id="bbc-updated">Last updated: just now</span>
@@ -503,13 +504,33 @@
               <span class="news-badge">TV · Regional</span>
             </div>
             <ul class="news-list" id="obn-list">
-              <li>Oduu galgalaa OBN — sa’aatii 1:00 irratti dhihaate.</li>
-              <li>Yaa’ii Idilee Caffee Oromiyaa fi murtii haaraa.</li>
-              <li>Oduu diinagdee fi hojii misoomaa.</li>
+              <li><a href="https://obn.com.et" target="_blank" rel="noopener">OBN — Homepage / Oduu haaraa</a></li>
+              <li><a href="https://www.facebook.com/OBNOromia" target="_blank" rel="noopener">OBN on Facebook (updates)</a></li>
+              <li><a href="https://www.youtube.com/@OBNOrTV" target="_blank" rel="noopener">OBN on YouTube (live & clips)</a></li>
             </ul>
             <div class="news-footer">
               <span id="obn-updated">Last updated: just now</span>
               <a href="https://obn.com.et" target="_blank" rel="noopener">OBN website →</a>
+            </div>
+          </article>
+
+          <!-- Election / Civic -->
+          <article class="news-card animate-up">
+            <div class="news-header">
+              <div class="news-source">Election &amp; Civic Info (Ethiopia)</div>
+              <span class="news-badge">Official · Civic</span>
+            </div>
+            <p style="font-size:0.8rem; color:var(--muted);">
+              Links below are official/public sources. Always verify information across multiple sources.
+            </p>
+            <ul class="news-list" id="election-list">
+              <li><a href="https://www.nebe.org.et" target="_blank" rel="noopener">NEBE — National Election Board of Ethiopia</a></li>
+              <li><a href="https://www.eisa.org" target="_blank" rel="noopener">EISA — Electoral Institute for Sustainable Democracy in Africa</a></li>
+              <li><a href="https://www.ethiopia.gov.et" target="_blank" rel="noopener">Ethiopia Government portal</a></li>
+            </ul>
+            <div class="news-footer">
+              <span id="election-updated">Last updated: just now</span>
+              <span>Reference links</span>
             </div>
           </article>
 
@@ -520,9 +541,9 @@
               <span class="news-badge badge-live">LIVE · Social</span>
             </div>
             <ul class="news-list" id="omn-fnn-list">
-              <li>Iraan Ayaatollaa 3ffaa muudatte — xiinxala siyaasaa.</li>
-              <li>OLA fi humnoota mootummaa gidduutti walitti bu’iinsa Fantaallee.</li>
-              <li>Rakkoo mirga namoomaa Abee‑Dongoroo fi Walloo.</li>
+              <li><a href="https://fnnmedia.org" target="_blank" rel="noopener">FNN Media — website</a></li>
+              <li><a href="https://www.youtube.com/results?search_query=OMN+Oromo+News" target="_blank" rel="noopener">OMN on YouTube (search)</a></li>
+              <li><a href="https://www.youtube.com/results?search_query=FNN+Media+Oromo" target="_blank" rel="noopener">FNN on YouTube (search)</a></li>
             </ul>
             <div class="news-footer">
               <span id="omn-fnn-updated">Last updated: just now</span>
@@ -692,6 +713,50 @@
         </p>
       </div>
     </section>
+
+    <!-- PRIVACY / GDPR (FULL-WIDTH) -->
+    <section class="card animate-up" id="privacy" style="grid-column: 1 / -1;">
+      <div class="card-header">
+        <div class="card-title">Privacy & GDPR (Iccitii / Seera Deetaa)</div>
+        <span class="card-tag">Statement</span>
+      </div>
+
+      <!-- Afaan Oromo -->
+      <div id="privacy-om">
+        <p class="hero-sub" style="margin-bottom:0.6rem;">
+          Fuulli kun (Oromo Info Hub) odeeffannoo oduu fi qunnamtii hawaasummaa <strong>link</strong> qofa walitti qaba.
+          Nuti yeroo ammaa <strong>deetaa dhuunfaa</strong> (akka maqaa, email, bilbila, ID, kkf) si irraa hin funaanu.
+        </p>
+        <ul style="margin-top:0.35rem; padding-left:1.1rem; font-size:0.85rem;">
+          <li><strong>Cookies:</strong> Fuulli kun cookies ofii hin kaa’u. Garuu linkiin gara YouTube/Facebook/BBC deemuu danda’a; isaan cookies isaanii fayyadamu.</li>
+          <li><strong>Analytics:</strong> Nuti yeroo ammaa analytics hin fayyadamnu (Google Analytics hin jiru).</li>
+          <li><strong>External links:</strong> Linkoota alaa yeroo tuqxu, seera isaanii (Privacy Policy) ilaali.</li>
+          <li><strong>Contact:</strong> Yoo WhatsApp/Phone irratti nu qunnamte, ergaan kee seera tajaajila sanaatiin hojjetama.</li>
+          <li><strong>GDPR rights:</strong> Yoo deetaan kee karaa qunnamtii nu bira ga’e, haqaa/sirreeffama/haquu gaafachuu dandeessa.</li>
+        </ul>
+        <p class="section-sub" style="margin-top:0.65rem;">
+          <strong>Update:</strong> Ibsi kun yeroo yerootti ni haaromsa.
+        </p>
+      </div>
+
+      <!-- English -->
+      <div id="privacy-en" style="display:none;">
+        <p class="hero-sub" style="margin-bottom:0.6rem;">
+          This site (Oromo Info Hub) mainly provides <strong>links</strong> to news and social media sources.
+          At this time, we do <strong>not</strong> intentionally collect personal data (such as name, email, phone, identifiers).
+        </p>
+        <ul style="margin-top:0.35rem; padding-left:1.1rem; font-size:0.85rem;">
+          <li><strong>Cookies:</strong> We do not set our own cookies, but third‑party sites (YouTube/Facebook/BBC) may set cookies when you visit them.</li>
+          <li><strong>Analytics:</strong> No analytics are currently used (no Google Analytics).</li>
+          <li><strong>External links:</strong> When you open external links, their privacy policies apply.</li>
+          <li><strong>Contact:</strong> If you contact us via WhatsApp/Phone, your messages are processed under that service’s terms.</li>
+          <li><strong>GDPR rights:</strong> If any personal data is received through contact, you can request access, correction, or deletion.</li>
+        </ul>
+        <p class="section-sub" style="margin-top:0.65rem;">
+          <strong>Updates:</strong> This statement may be updated from time to time.
+        </p>
+      </div>
+    </section>
   </main>
 
   <footer>
@@ -713,6 +778,10 @@
     const aboutOm = document.getElementById('about-om');
     const aboutEn = document.getElementById('about-en');
 
+    // Privacy toggle targets
+    const privacyOm = document.getElementById('privacy-om');
+    const privacyEn = document.getElementById('privacy-en');
+
     function setLang(lang) {
       if (lang === 'om') {
         btnOm.classList.add('active');
@@ -727,6 +796,9 @@
 
         aboutOm.style.display = '';
         aboutEn.style.display = 'none';
+
+        privacyOm.style.display = '';
+        privacyEn.style.display = 'none';
       } else {
         btnEn.classList.add('active');
         btnOm.classList.remove('active');
@@ -740,6 +812,9 @@
 
         aboutOm.style.display = 'none';
         aboutEn.style.display = '';
+
+        privacyOm.style.display = 'none';
+        privacyEn.style.display = '';
       }
     }
 
@@ -747,7 +822,7 @@
     btnEn.addEventListener('click', () => setLang('en'));
 
     // Auto-refresh timestamps (placeholder for real feeds)
-    const updatedIds = ['bbc-updated', 'obn-updated', 'omn-fnn-updated', 'social-updated'];
+    const updatedIds = ['bbc-updated', 'obn-updated', 'election-updated', 'omn-fnn-updated', 'social-updated'];
 
     function formatTime(d) {
       return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
