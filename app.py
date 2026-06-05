@@ -52,7 +52,6 @@ def view_history(limit: int = 20) -> str:
             continue
 
         answer = item.get("answer", "")
-        preview = answer[:300] + ("..." if len(answer) > 300 else "")
 
         blocks.append(
             "\n".join(
@@ -60,7 +59,8 @@ def view_history(limit: int = 20) -> str:
                     f"[{i}] {item.get('timestamp_utc', '')}",
                     f"Intent: {item.get('intent', '')}",
                     f"Message: {item.get('message', '')}",
-                    f"Answer Preview: {preview}",
+                    "Answer:",
+                    answer,
                 ]
             )
         )
