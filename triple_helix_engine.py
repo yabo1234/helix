@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any
 
+from prompt_history_logger import append_prompt_log
 from triple_helix_prompt_program import QUESTIONS_BY_INTENT, COMMON_QUESTIONS, build_answer
 
 
@@ -53,6 +54,13 @@ def generate_reply(message: str, history: list[dict[str, str]] | None = None) ->
     intent = _triage_intent(message)
     questions = _clarifying_questions(intent)
     answer = build_answer(questions)
+
+    append_prompt_log(
+        message=message,
+        history=history,
+        intent=intent,
+        answer=answer,
+    )
 
     meta = {
         "intent": intent,
