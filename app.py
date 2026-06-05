@@ -4,6 +4,7 @@ import os
 
 import gradio as gr
 
+from prompt_history_logger import LOG_PATH
 from triple_helix_engine import generate_reply
 
 
@@ -20,6 +21,12 @@ def chat_fn(message: str, history: list[dict[str, str]]):
     reply = generate_reply(message=message, history=history)
     # If you want to surface metadata in the UI later, you can append it here.
     return reply.answer
+
+
+def get_history_file() -> str | None:
+    if LOG_PATH.exists():
+        return str(LOG_PATH)
+    return None
 
 
 def build_ui() -> gr.Blocks:
@@ -46,8 +53,17 @@ def build_ui() -> gr.Blocks:
         )
 
         gr.Markdown(
+            "### Prompt History\n"
+            "Use the button below to download the saved prompt and response history."
+        )
+        download_btn = gr.Button("Download Prompt History")
+        history_file = gr.File(label="Prompt History File")
+        download_btn.click(fn=get_history_file, outputs=history_file)
+
+        gr.Markdown(
             "### Notes\n"
             "- This UI currently uses a built-in, rule-based response engine.\n"
+            "- Prompt/response history is saved locally to `prompt_history.jsonl`.\n"
             "- Swap `generate_reply()` in `triple_helix_engine.py` for an LLM/API when ready."
         )
 
@@ -58,4 +74,3 @@ if __name__ == "__main__":
     demo = build_ui()
     port = int(os.environ.get("PORT", "7860"))
     demo.launch(server_name="0.0.0.0", server_port=port, show_api=False)
-
