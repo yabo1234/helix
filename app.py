@@ -16,6 +16,37 @@ APP_DESCRIPTION = (
 )
 
 
+COPY_HISTORY_JS = """
+(text) => {
+  if (!text) {
+    return "No history available to copy.";
+  }
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text);
+    return "Prompt history copied to clipboard.";
+  }
+
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.focus();
+  textarea.select();
+
+  try {
+    document.execCommand('copy');
+    return "Prompt history copied to clipboard.";
+  } catch (err) {
+    return "Clipboard copy failed. Please copy manually from the history viewer.";
+  } finally {
+    document.body.removeChild(textarea);
+  }
+}
+"""
+
+
 def chat_fn(message: str, history: list[dict[str, str]]):
     # Gradio ChatInterface passes history as a list of {"role": "...", "content": "..."}
     # in newer versions; we keep it generic and only use it for metadata.
@@ -93,10 +124,11 @@ def build_ui() -> gr.Blocks:
 
         gr.Markdown(
             "### Prompt History\n"
-            "Use the controls below to view, download, or clear the saved prompt and response history."
+            "Use the controls below to view, copy, download, or clear the saved prompt and response history."
         )
         with gr.Row():
             view_history_btn = gr.Button("View Recent History")
+            copy_history_btn = gr.Button("Copy History to Clipboard")
             download_btn = gr.Button("Download Prompt History")
             clear_history_btn = gr.Button("Clear Prompt History", variant="stop")
 
@@ -107,11 +139,12 @@ def build_ui() -> gr.Blocks:
             interactive=False,
         )
         history_file = gr.File(label="Prompt History File")
-        clear_status = gr.Textbox(label="History Status", interactive=False)
+        history_status = gr.Textbox(label="History Status", interactive=False)
 
         view_history_btn.click(fn=view_history, outputs=history_view)
+        copy_history_btn.click(fn=None, inputs=history_view, outputs=history_status, js=COPY_HISTORY_JS)
         download_btn.click(fn=get_history_file, outputs=history_file)
-        clear_history_btn.click(fn=clear_history_file, outputs=clear_status)
+        clear_history_btn.click(fn=clear_history_file, outputs=history_status)
 
         gr.Markdown(
             "### Notes\n"
