@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 
 import gradio as gr
@@ -36,6 +37,37 @@ def clear_history_file() -> str:
     return "No prompt history file found."
 
 
+def view_history(limit: int = 20) -> str:
+    if not LOG_PATH.exists():
+        return "No prompt history file found."
+
+    lines = LOG_PATH.read_text(encoding="utf-8").splitlines()[-limit:]
+    blocks: list[str] = []
+
+    for i, line in enumerate(lines, start=1):
+        try:
+            item = json.loads(line)
+        except json.JSONDecodeError:
+            blocks.append(f"[{i}] Invalid log entry")
+            continue
+
+        answer = item.get("answer", "")
+        preview = answer[:300] + ("..." if len(answer) > 300 else "")
+
+        blocks.append(
+            "\n".join(
+                [
+                    f"[{i}] {item.get('timestamp_utc', '')}",
+                    f"Intent: {item.get('intent', '')}",
+                    f"Message: {item.get('message', '')}",
+                    f"Answer Preview: {preview}",
+                ]
+            )
+        )
+
+    return "\n\n" + ("\n" + ("-" * 60) + "\n\n").join(blocks)
+
+
 def build_ui() -> gr.Blocks:
     with gr.Blocks(title=APP_TITLE, theme=gr.themes.Soft()) as demo:
         gr.Markdown(f"## {APP_TITLE}\n\n{APP_DESCRIPTION}")
@@ -61,13 +93,23 @@ def build_ui() -> gr.Blocks:
 
         gr.Markdown(
             "### Prompt History\n"
-            "Use the buttons below to download or clear the saved prompt and response history."
+            "Use the controls below to view, download, or clear the saved prompt and response history."
         )
         with gr.Row():
+            view_history_btn = gr.Button("View Recent History")
             download_btn = gr.Button("Download Prompt History")
             clear_history_btn = gr.Button("Clear Prompt History", variant="stop")
+
+        history_view = gr.Textbox(
+            label="Recent Prompt History",
+            lines=18,
+            max_lines=30,
+            interactive=False,
+        )
         history_file = gr.File(label="Prompt History File")
         clear_status = gr.Textbox(label="History Status", interactive=False)
+
+        view_history_btn.click(fn=view_history, outputs=history_view)
         download_btn.click(fn=get_history_file, outputs=history_file)
         clear_history_btn.click(fn=clear_history_file, outputs=clear_status)
 
