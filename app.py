@@ -29,6 +29,13 @@ def get_history_file() -> str | None:
     return None
 
 
+def clear_history_file() -> str:
+    if LOG_PATH.exists():
+        LOG_PATH.unlink()
+        return "Prompt history cleared."
+    return "No prompt history file found."
+
+
 def build_ui() -> gr.Blocks:
     with gr.Blocks(title=APP_TITLE, theme=gr.themes.Soft()) as demo:
         gr.Markdown(f"## {APP_TITLE}\n\n{APP_DESCRIPTION}")
@@ -54,11 +61,15 @@ def build_ui() -> gr.Blocks:
 
         gr.Markdown(
             "### Prompt History\n"
-            "Use the button below to download the saved prompt and response history."
+            "Use the buttons below to download or clear the saved prompt and response history."
         )
-        download_btn = gr.Button("Download Prompt History")
+        with gr.Row():
+            download_btn = gr.Button("Download Prompt History")
+            clear_history_btn = gr.Button("Clear Prompt History", variant="stop")
         history_file = gr.File(label="Prompt History File")
+        clear_status = gr.Textbox(label="History Status", interactive=False)
         download_btn.click(fn=get_history_file, outputs=history_file)
+        clear_history_btn.click(fn=clear_history_file, outputs=clear_status)
 
         gr.Markdown(
             "### Notes\n"
