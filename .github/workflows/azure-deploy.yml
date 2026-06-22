@@ -21,6 +21,9 @@ on:
     branches:
       - main
 
+env:
+  IMAGE_NAME: helix-app
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -31,29 +34,31 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set deploy flag
+        id: ctx
+        run: |
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "is_deploy=true" >> "$GITHUB_OUTPUT"
+            echo "tags=${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }},${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:latest" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_deploy=false" >> "$GITHUB_OUTPUT"
+            echo "tags=${{ env.IMAGE_NAME }}:${{ github.sha }}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Log in to Azure Container Registry
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: steps.ctx.outputs.is_deploy == 'true'
         uses: docker/login-action@v3
         with:
           registry: ${{ secrets.REGISTRY_LOGIN_SERVER }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
-      - name: Compute image tags
-        id: tags
-        run: |
-          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/main" ]]; then
-            echo "value=${{ secrets.REGISTRY_LOGIN_SERVER }}/helix-app:${{ github.sha }},${{ secrets.REGISTRY_LOGIN_SERVER }}/helix-app:latest" >> "$GITHUB_OUTPUT"
-          else
-            echo "value=helix-app:${{ github.sha }}" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
-          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-          tags: ${{ steps.tags.outputs.value }}
+          push: ${{ steps.ctx.outputs.is_deploy == 'true' }}
+          tags: ${{ steps.ctx.outputs.tags }}
 
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -72,7 +77,7 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
-          images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/helix-app:${{ github.sha }}
+          images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
       - name: Set App Service port settings
         uses: azure/CLI@v1
