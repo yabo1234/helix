@@ -13,32 +13,26 @@ client = AzureOpenAI(
 
 def chat_fn(message, history):
     try:
-        # Build conversation history
         messages = [
             {
                 "role": "system",
                 "content": "You are Triple Helix Engine, a helpful AI assistant."
             }
         ]
-        
-        # Add chat history
         for human, assistant in history:
             messages.append({"role": "user", "content": human})
             messages.append({"role": "assistant", "content": assistant})
-        
-        # Add current message
+
         messages.append({"role": "user", "content": message})
-        
-        # Call Azure OpenAI
+
         response = client.chat.completions.create(
             model=os.environ.get("AZURE_OPENAI_DEPLOYMENT", "gpt-4o-mini"),
             messages=messages,
             max_tokens=800,
             temperature=0.7
         )
-        
         return response.choices[0].message.content
-        
+
     except Exception as e:
         return f"Error: {str(e)}"
 
@@ -54,13 +48,12 @@ def build_ui():
     return demo
 
 
-# Required for gunicorn
-demo = build_ui()
-app = demo.app          # ✅ Exposes Gradio as WSGI app
-
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", "8000"))
+    demo = build_ui()
     demo.launch(
-        server_name="0.0.0.0",    # ✅ Fixed from 127.0.0.1
-        server_port=port
+        server_name="0.0.0.0",  # ✅ Must be 0.0.0.0 not 127.0.0.1
+        server_port=port,
+        show_error=True
+    )
     )
