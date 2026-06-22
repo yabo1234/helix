@@ -39,14 +39,21 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
+      - name: Compute image tags
+        id: tags
+        run: |
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "value=${{ secrets.REGISTRY_LOGIN_SERVER }}/helix-app:${{ github.sha }},${{ secrets.REGISTRY_LOGIN_SERVER }}/helix-app:latest" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=helix-app:${{ github.sha }}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
           context: .
           push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-          tags: |
-            ${{ secrets.REGISTRY_LOGIN_SERVER }}/helix-app:${{ github.sha }}
-            ${{ secrets.REGISTRY_LOGIN_SERVER }}/helix-app:latest
+          tags: ${{ steps.tags.outputs.value }}
 
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
