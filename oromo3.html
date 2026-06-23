@@ -1,7 +1,8 @@
 <html lang="om">
 <head>
   <meta charset="UTF-8" />
-  <title>Baga nagaan dhufte — Welcome</title>
+  <title>Madda Oduu Afaan Oromoo — BBC · OBN · OMN · FNN · VOA</title>
+  <meta name="description" content="Oduu haaraa Afaan Oromoo — BBC, OBN, OMN, FNN fi VOA irraa bakka tokkotti. Latest Oromo news hub." />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <style>
@@ -251,16 +252,24 @@
 
     .news-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 0.75rem;
+    }
+    @media (max-width: 640px) {
+      .news-grid { grid-template-columns: minmax(0, 1fr); }
     }
 
     .news-card {
       border-radius: var(--radius-md);
       border: 1px solid var(--border);
       background: var(--bg-soft);
-      padding: 0.75rem 0.85rem;
-      font-size: 0.8rem;
+      padding: 0.9rem 1rem;
+      font-size: 0.82rem;
+      transition: box-shadow 0.15s, transform 0.15s;
+    }
+    .news-card:hover {
+      box-shadow: 0 8px 24px rgba(29,78,216,0.12);
+      transform: translateY(-1px);
     }
     .news-header {
       display: flex;
@@ -532,9 +541,12 @@
       </div>
 
       <div>
-        <div class="section-title" style="margin-top:1.1rem;">Latest News</div>
+        <div class="section-title" style="margin-top:1.1rem; font-size:1.2rem; font-weight:800; color:#0f172a; display:flex; align-items:center; gap:0.5rem;">
+          <span>&#128240;</span>
+          <span id="news-title">Madda Oduu Afaan Oromoo</span>
+        </div>
         <div class="section-sub" id="news-sub">
-          Recent Oromo headlines and social updates. Timestamps auto‑refresh every 60 seconds.
+          Oduu haaraa madda amanamaa irraa — BBC, OBN, OMN, FNN fi VOA. Timestamps 60 sec keessatti of‑umaan haaromsa.
         </div>
 
         <section id="news" class="news-grid">
@@ -542,12 +554,13 @@
           <article class="news-card animate-up">
             <div class="news-header">
               <div class="news-source">BBC News Afaan Oromoo</div>
-              <span class="news-badge">RSS · Verified</span>
+              <span class="news-badge">&#9989; Verified</span>
             </div>
             <ul class="news-list" id="bbc-list">
-              <li><a href="https://www.bbc.com/afaanoromoo" target="_blank" rel="noopener">BBC Afaan Oromoo — latest headlines</a></li>
-              <li><a href="https://www.bbc.com/afaanoromoo/topics/cz74k3v2zdqt" target="_blank" rel="noopener">Filannoo / Elections (BBC Afaan Oromoo topic)</a></li>
-              <li><a href="https://www.bbc.com/afaanoromoo/topics/cyx5krnw38vt" target="_blank" rel="noopener">Siyaasaa / Politics (BBC Afaan Oromoo topic)</a></li>
+              <li><a href="https://www.bbc.com/afaanoromoo" target="_blank" rel="noopener">BBC Afaan Oromoo — Fuula jalqabaa</a></li>
+              <li><a href="https://www.bbc.com/afaanoromoo/topics/cz74k3v2zdqt" target="_blank" rel="noopener">Filannoo / Elections topic</a></li>
+              <li><a href="https://www.bbc.com/afaanoromoo/topics/cyx5krnw38vt" target="_blank" rel="noopener">Siyaasaa / Politics topic</a></li>
+              <li><a href="https://www.bbc.com/afaanoromoo/topics/c83plyx0evkt" target="_blank" rel="noopener">Oromiyaa — oduu naannoo</a></li>
             </ul>
             <div class="news-footer">
               <span id="bbc-updated">Last updated: just now</span>
@@ -562,9 +575,10 @@
               <span class="news-badge">TV · Regional</span>
             </div>
             <ul class="news-list" id="obn-list">
-              <li><a href="https://obn.com.et" target="_blank" rel="noopener">OBN — Homepage / Oduu haaraa</a></li>
-              <li><a href="https://www.facebook.com/OBNOromia" target="_blank" rel="noopener">OBN on Facebook (updates)</a></li>
-              <li><a href="https://www.youtube.com/@OBNOrTV" target="_blank" rel="noopener">OBN on YouTube (live & clips)</a></li>
+              <li><a href="https://obn.com.et" target="_blank" rel="noopener">OBN — Oduu haaraa / Homepage</a></li>
+              <li><a href="https://www.facebook.com/OBNOromia" target="_blank" rel="noopener">OBN Facebook — haaromsa yeroo dhiyoo</a></li>
+              <li><a href="https://www.youtube.com/@OBNOrTV" target="_blank" rel="noopener">OBN YouTube — tamsaasa fi clips</a></li>
+              <li><a href="https://www.youtube.com/results?search_query=OBN+Oromia+oduu" target="_blank" rel="noopener">OBN Oduu — YouTube Search</a></li>
             </ul>
             <div class="news-footer">
               <span id="obn-updated">Last updated: just now</span>
@@ -572,40 +586,54 @@
             </div>
           </article>
 
-          <!-- Election / Civic -->
+          <!-- OMN -->
           <article class="news-card animate-up">
             <div class="news-header">
-              <div class="news-source">Election &amp; Civic Info (Ethiopia)</div>
-              <span class="news-badge">Official · Civic</span>
+              <div class="news-source">OMN — Oromo Media Network</div>
+              <span class="news-badge badge-live">&#128308; LIVE</span>
             </div>
-            <p style="font-size:0.8rem; color:var(--muted);">
-              Links below are official/public sources. Always verify information across multiple sources.
-            </p>
-            <ul class="news-list" id="election-list">
-              <li><a href="https://www.nebe.org.et" target="_blank" rel="noopener">NEBE — National Election Board of Ethiopia</a></li>
-              <li><a href="https://www.eisa.org" target="_blank" rel="noopener">EISA — Electoral Institute for Sustainable Democracy in Africa</a></li>
-              <li><a href="https://www.ethiopia.gov.et" target="_blank" rel="noopener">Ethiopia Government portal</a></li>
+            <ul class="news-list" id="omn-list">
+              <li><a href="https://www.oromoMediaNetwork.com" target="_blank" rel="noopener">OMN — Homepage (oromoMediaNetwork.com)</a></li>
+              <li><a href="https://www.youtube.com/results?search_query=OMN+Oromo+Media+Network" target="_blank" rel="noopener">OMN YouTube — oduu fi tamsaasa</a></li>
+              <li><a href="https://www.facebook.com/OromoMediaNetwork" target="_blank" rel="noopener">OMN Facebook</a></li>
             </ul>
             <div class="news-footer">
-              <span id="election-updated">Last updated: just now</span>
-              <span>Reference links</span>
+              <span id="omn-updated">Last updated: just now</span>
+              <a href="https://www.youtube.com/results?search_query=OMN+Oromo+Media+Network" target="_blank" rel="noopener">OMN YouTube →</a>
             </div>
           </article>
 
-          <!-- OMN & FNN -->
+          <!-- FNN -->
           <article class="news-card animate-up">
             <div class="news-header">
-              <div class="news-source">OMN &amp; FNN Media</div>
-              <span class="news-badge badge-live">LIVE · Social</span>
+              <div class="news-source">FNN Media</div>
+              <span class="news-badge badge-live">&#128308; LIVE</span>
             </div>
-            <ul class="news-list" id="omn-fnn-list">
+            <ul class="news-list" id="fnn-list">
               <li><a href="https://fnnmedia.org" target="_blank" rel="noopener">FNN Media — website</a></li>
-              <li><a href="https://www.youtube.com/results?search_query=OMN+Oromo+News" target="_blank" rel="noopener">OMN on YouTube (search)</a></li>
-              <li><a href="https://www.youtube.com/results?search_query=FNN+Media+Oromo" target="_blank" rel="noopener">FNN on YouTube (search)</a></li>
+              <li><a href="https://www.youtube.com/results?search_query=FNN+Media+Oromo" target="_blank" rel="noopener">FNN YouTube — oduu Oromoo</a></li>
+              <li><a href="https://www.facebook.com/FNNMedia" target="_blank" rel="noopener">FNN Facebook</a></li>
             </ul>
             <div class="news-footer">
-              <span id="omn-fnn-updated">Last updated: just now</span>
+              <span id="fnn-updated">Last updated: just now</span>
               <a href="https://fnnmedia.org" target="_blank" rel="noopener">FNN Media →</a>
+            </div>
+          </article>
+
+          <!-- VOA Afaan Oromoo -->
+          <article class="news-card animate-up">
+            <div class="news-header">
+              <div class="news-source">VOA Afaan Oromoo</div>
+              <span class="news-badge">&#9989; Verified</span>
+            </div>
+            <ul class="news-list" id="voa-list">
+              <li><a href="https://www.voaafaanoromoo.com/" target="_blank" rel="noopener">VOA Afaan Oromoo — fuula jalqabaa</a></li>
+              <li><a href="https://www.voaafaanoromoo.com/section/oduu/1890" target="_blank" rel="noopener">Oduu haaraa (VOA)</a></li>
+              <li><a href="https://www.voaafaanoromoo.com/section/sagalee/3266" target="_blank" rel="noopener">Sagalee / Radio (VOA)</a></li>
+            </ul>
+            <div class="news-footer">
+              <span id="voa-updated">Last updated: just now</span>
+              <a href="https://www.voaafaanoromoo.com/" target="_blank" rel="noopener">VOA Afaan Oromoo →</a>
             </div>
           </article>
 
@@ -615,12 +643,12 @@
               <div class="news-source">Social &amp; Live Streams</div>
               <span class="news-badge">YouTube · Facebook</span>
             </div>
-            <p style="font-size:0.8rem; color:var(--muted);">
+            <p style="font-size:0.8rem; color:var(--muted); margin-bottom:0.4rem;">
               Tamsaasa haaraa fi oduu yeroo dhiyoo kanaaf qunnamtii YouTube fi Facebook asii gadii fayyadami.
             </p>
             <div class="social-links">
               <a class="social-chip" href="https://www.youtube.com/@africabigdata8482" target="_blank" rel="noopener">
-                <span class="icon">▶</span>
+                <span class="icon">&#9654;</span>
                 <span>YouTube · @africabigdata8482</span>
               </a>
               <a class="social-chip" href="https://www.facebook.com/profile.php?id=100087420807795" target="_blank" rel="noopener">
@@ -859,6 +887,7 @@
     const heroOm = document.getElementById('hero-om');
     const heroEn = document.getElementById('hero-en');
     const sideIntro = document.getElementById('side-intro');
+    const newsTitle = document.getElementById('news-title');
 
     // About toggle targets
     const aboutOm = document.getElementById('about-om');
@@ -884,8 +913,11 @@
         heroTitle.textContent = 'Oduu fi Odeeffannoo Haaraa Afaan Oromoo';
         heroSub.textContent =
           'Oduu haaraa, odeeffannoo hawaasaa, fi tamsaasa YouTube/Facebook bakka tokkotti.';
+        document.getElementById('news-sub').textContent =
+          'Oduu haaraa madda amanamaa irraa — BBC, OBN, OMN, FNN fi VOA. Timestamps 60 sec keessatti of‑umaan haaromsa.';
         sideIntro.textContent =
           'Fuula kana haaraa argachuuf Refresh godhi. Oduu haaraa 60 sec keessatti of‑umaan haaromsa.';
+        if (newsTitle) newsTitle.textContent = 'Madda Oduu Afaan Oromoo';
 
         aboutOm.style.display = '';
         aboutEn.style.display = 'none';
@@ -903,8 +935,11 @@
         heroTitle.textContent = 'Latest Oromo News & Civic Information';
         heroSub.textContent =
           'Latest Oromo news, social updates, and YouTube/Facebook streams in one place.';
+        document.getElementById('news-sub').textContent =
+          'Latest headlines from BBC, OBN, OMN, FNN and VOA Afaan Oromoo. Timestamps auto‑update every 60 seconds.';
         sideIntro.textContent =
           'Press Refresh to see the latest version. News timestamps auto‑update every 60 seconds.';
+        if (newsTitle) newsTitle.textContent = 'Oromo News Sources';
 
         aboutOm.style.display = 'none';
         aboutEn.style.display = '';
@@ -956,7 +991,7 @@
     });
 
     // Auto-refresh timestamps (placeholder for real feeds)
-    const updatedIds = ['bbc-updated', 'obn-updated', 'election-updated', 'omn-fnn-updated', 'social-updated'];
+    const updatedIds = ['bbc-updated', 'obn-updated', 'omn-updated', 'fnn-updated', 'voa-updated', 'social-updated'];
 
     function formatTime(d) {
       return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
