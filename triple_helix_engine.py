@@ -1,153 +1,127 @@
-"""
-Triple-Helix chatbot engine (optimized).
-
-Now supports Azure OpenAI, structured prompting, and clean extensibility.
-"""
-
-from __future__ import annotations
-
 import os
-from dataclasses import dataclass
-from datetime import datetime, timezone
-from typing import Any
+import requests
 
-from openai import AzureOpenAI
-
-from prompt_history_logger import append_prompt_log
-from triple_helix_prompt_program import (
-    QUESTIONS_BY_INTENT,
-    COMMON_QUESTIONS,
-    build_answer,  # fallback
-)
-
-# -------------------------------------------------------------------
-# Azure OpenAI Client
-# -------------------------------------------------------------------
-
-client = AzureOpenAI(
-    api_key=os.getenv("AZURE_OPENAI_API_KEY"),
-    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
-    api_version="2024-02-01"
-)
-
-MODEL = os.getenv("AZURE_OPENAI_DEPLOYMENT")  # e.g. "gpt-4o-mini"
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+API_URL = "https://models.inference.ai.azure.com/chat/completions"
+MODEL_NAME = "mistral-nemo-instruct"
 
 
-# -------------------------------------------------------------------
-# Reply Dataclass
-# -------------------------------------------------------------------
+def _call_model(messages, model: str = MODEL_NAME) -> str:
+    if not GITHUB_TOKEN:
+        raise RuntimeError("GITHUB_TOKEN is not set in environment variables.")
 
-@dataclass(frozen=True)
-class TripleHelixReply:
-    answer: str
-    meta: dict[str, Any]
-
-
-# -------------------------------------------------------------------
-# Intent Triage
-# -------------------------------------------------------------------
-
-def _triage_intent(message: str) -> str:
-    m = message.lower().strip()
-
-    intent_map = {
-        "funding": ("grant", "funding", "proposal", "call for", "rfp"),
-        "commercialization": ("startup", "product", "go-to-market", "commercial", "pricing"),
-        "policy": ("policy", "regulation", "law", "compliance", "public sector", "government"),
-        "research": ("research", "paper", "university", "lab", "prototype", "method"),
-        "partnership": ("partnership", "mou", "consortium", "collaboration", "stakeholder"),
+    headers = {
+        "Authorization": f"Bearer {GITHUB_TOKEN}",
+        "Content-Type": "application/json",
     }
 
-    for intent, keywords in intent_map.items():
-        if any(k in m for k in keywords):
-            return intent
-
-    return "general"
-
-
-# -------------------------------------------------------------------
-# Clarifying Questions
-# -------------------------------------------------------------------
-
-def _clarifying_questions(intent: str) -> list[str]:
-    return (QUESTIONS_BY_INTENT.get(intent, []) + COMMON_QUESTIONS)[:5]
-
-
-# -------------------------------------------------------------------
-# Azure OpenAI LLM Call
-# -------------------------------------------------------------------
-
-def _llm_generate(prompt: str) -> str:
-    """
-    Generate a Triple-Helix style answer using Azure OpenAI.
-    Falls back to build_answer() if the LLM fails.
-    """
-    try:
-        response = client.chat.completions.create(
-            model=MODEL,
-            messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "You are the Triple-Helix Innovation Assistant. "
-                        "Your job is to analyze user questions using the "
-                        "Academia–Industry–Government framework. "
-                        "Be structured, concise, and actionable."
-                    ),
-                },
-                {"role": "user", "content": prompt},
-            ],
-            max_tokens=350,
-            temperature=0.2,
-        )
-        return response.choices[0].message.content
-
-    except Exception as e:
-        # Fallback to deterministic offline answer
-        return f"(LLM unavailable, fallback used)\n\n{build_answer([prompt])}"
-
-
-# -------------------------------------------------------------------
-# Main Reply Generator
-# -------------------------------------------------------------------
-
-def generate_reply(message: str, history: list[dict[str, str]] | None = None) -> TripleHelixReply:
-    """
-    Produce a structured Triple-Helix style response.
-    Now powered by Azure OpenAI with fallback.
-    """
-
-    intent = _triage_intent(message)
-    questions = _clarifying_questions(intent)
-
-    # Build structured prompt
-    prompt = (
-        f"User message:\n{message}\n\n"
-        f"Detected intent: {intent}\n\n"
-        "Clarifying questions:\n"
-        + "\n".join(f"- {q}" for q in questions)
-        + "\n\n"
-        "Produce a structured Triple-Helix analysis."
-    )
-
-    # Generate answer via Azure OpenAI
-    answer = _llm_generate(prompt)
-
-    # Log interaction
-    append_prompt_log(
-        message=message,
-        history=history,
-        intent=intent,
-        answer=answer,
-    )
-
-    # Metadata
-    meta = {
-        "intent": intent,
-        "generated_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "history_turns": len(history or []),
-        "model": MODEL,
+    payload = {
+        "model": model,
+        "messages": messages,
     }
 
-    return TripleHelixReply(answer=answer, meta=meta)
+    resp = requests.post(API_URL, headers=headers, json=payload, timeout=60)
+    resp.raise_for_status()
+    data = resp.json()
+    return data["choices"][0]["message"]["content"]
 
+
+def analyze_policy(topic: str) -> str:
+    messages = [
+        {
+            "role": "system",
+            "content": (
+                "You are a policy analyst specializing in innovation systems, "
+                "Triple Helix models, and digital governance. Provide structured, "
+                "evidence-based analysis with clear sections."
+            ),
+        },
+        {
+            "role": "user",
+            "content": (
+                f"Analyze the following topic using the Triple Helix framework "
+                f"(Government–Industry–Academia):\n\n{topic}\n\n"
+                "Include:\n"
+                "1. Executive summary\n"
+                "2. Triple Helix actor map\n"
+                "3. Constraints and opportunities\n"
+                "4. Policy recommendations\n"
+                "5. Risks and mitigation\n"
+                "6. Short Amharic summary"
+            ),
+        },
+    ]
+    return _call_model(messages)
+
+
+def triple_helix_map(sector: str) -> str:
+    messages = [
+        {
+            "role": "system",
+            "content": (
+                "You generate structured Triple Helix innovation maps. "
+                "Output must be valid JSON."
+            ),
+        },
+        {
+            "role": "user",
+            "content": (
+                f"Create a Triple Helix innovation map for:\n\n{sector}\n\n"
+                "Output JSON:\n"
+                "{\n"
+                '  "government": [...],\n'
+                '  "industry": [...],\n'
+                '  "academia": [...],\n'
+                '  "interactions": [...],\n'
+                '  "gaps": [...],\n'
+                '  "opportunities": [...]\n'
+                "}"
+            ),
+        },
+    ]
+    return _call_model(messages)
+
+
+def translate_to_amharic(text: str) -> str:
+    messages = [
+        {
+            "role": "system",
+            "content": (
+                "You translate between English and Amharic with high fidelity. "
+                "Preserve meaning, tone, and technical terminology."
+            ),
+        },
+        {
+            "role": "user",
+            "content": f"Translate this into Amharic:\n\n{text}",
+        },
+    ]
+    return _call_model(messages)
+
+
+def write_research_paper(topic: str) -> str:
+    messages = [
+        {
+            "role": "system",
+            "content": (
+                "You write long-form research papers with academic structure. "
+                "Use headings, citations, and analytical depth."
+            ),
+        },
+        {
+            "role": "user",
+            "content": (
+                f"Write a research paper on:\n\n{topic}\n\n"
+                "Include:\n"
+                "- Abstract\n"
+                "- Background\n"
+                "- Literature review\n"
+                "- Analysis\n"
+                "- Case studies\n"
+                "- Policy implications\n"
+                "- Conclusion\n"
+                "- Harvard-style references"
+            ),
+        },
+    ]
+    return _call_model(messages)
