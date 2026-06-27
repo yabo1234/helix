@@ -1,0 +1,89 @@
+# Required GitHub Secrets:
+# - AZURE_CREDENTIALS: Azure service principal JSON for azure/login
+# - AZURE_WEBAPP_NAME: Name of the Azure App Service
+# - AZURE_RESOURCE_GROUP: Azure resource group containing the App Service
+# - REGISTRY_LOGIN_SERVER: ACR login server (for example, myregistry.azurecr.io)
+# - REGISTRY_USERNAME: ACR username
+# - REGISTRY_PASSWORD: ACR password
+#
+# Setup:
+# 1. Create an Azure App Service configured for a custom container.
+# 2. Create or identify an Azure Container Registry and add the login details above as repository secrets.
+# 3. Create a service principal with access to the App Service resource group and save its JSON as AZURE_CREDENTIALS.
+
+name: Build and deploy Triple-Helix Chatbot to Azure App Service
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  IMAGE_NAME: helix-app
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set deploy flag
+        id: ctx
+        run: |
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "is_deploy=true" >> "$GITHUB_OUTPUT"
+            echo "tags=${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }},${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:latest" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_deploy=false" >> "$GITHUB_OUTPUT"
+            echo "tags=${{ env.IMAGE_NAME }}:${{ github.sha }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Log in to Azure Container Registry
+        if: steps.ctx.outputs.is_deploy == 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: ${{ steps.ctx.outputs.is_deploy == 'true' }}
+          tags: ${{ steps.ctx.outputs.tags }}
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    permissions:
+      contents: read
+
+    steps:
+      - name: Log in to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy container to Azure App Service
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+      - name: Set App Service port settings
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az webapp config appsettings set \
+              --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" \
+              --name "${{ secrets.AZURE_WEBAPP_NAME }}" \
+              --settings PORT=7860 WEBSITES_PORT=7860
